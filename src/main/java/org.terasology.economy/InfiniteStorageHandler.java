@@ -22,6 +22,7 @@ import java.util.Map;
 
 public class InfiniteStorageHandler implements StorageComponentHandler<InfiniteStorageComponent> {
 
+    @Override
     public int store(InfiniteStorageComponent infiniteStorageComponent, String resource, int amount) {
         Map<String, Integer> inventory = infiniteStorageComponent.inventory;
         if (inventory.containsKey(resource)) {
@@ -33,6 +34,7 @@ public class InfiniteStorageHandler implements StorageComponentHandler<InfiniteS
         return 0;
     }
 
+    @Override
     public int draw(InfiniteStorageComponent infiniteStorageComponent, String resource, int amount) {
         Map<String, Integer> inventory = infiniteStorageComponent.inventory;
         if (inventory.containsKey(resource)) {
@@ -48,6 +50,17 @@ public class InfiniteStorageHandler implements StorageComponentHandler<InfiniteS
         }
     }
 
+    @Override
+    public int availableResourceAmount(InfiniteStorageComponent infiniteStorageComponent, String resource) {
+        return infiniteStorageComponent.inventory.getOrDefault(resource, 0);
+    }
+
+    @Override
+    public int availableResourceCapacity(InfiniteStorageComponent infiniteStorageComponent, String resource) {
+        return Integer.MAX_VALUE;
+    }
+
+    @Override
     public Class getStorageComponentClass() {
         return InfiniteStorageComponent.class;
     }

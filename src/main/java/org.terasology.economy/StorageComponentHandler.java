@@ -36,5 +36,9 @@ public interface StorageComponentHandler<T extends Component> {
      */
     int draw(T storage, String resource, int amount);
 
+    int availableResourceAmount(T storage, String resource);
+
+    int availableResourceCapacity(T storage, String resource);
+
     Class getStorageComponentClass();
 }

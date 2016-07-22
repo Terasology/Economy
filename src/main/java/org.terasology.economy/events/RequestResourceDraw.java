@@ -13,23 +13,33 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package org.terasology.economy.events;
 
-package org.terasology.economy.components;
 
-
-import org.terasology.entitySystem.Component;
 import org.terasology.entitySystem.entity.EntityRef;
+import org.terasology.entitySystem.event.Event;
 
-import java.util.Map;
+public class RequestResourceDraw implements Event {
+    private String resource;
+    private int amount;
+    private EntityRef target;
 
-public class MarketSubscriber implements Component {
+    public RequestResourceDraw(String resource, int amount, EntityRef target) {
+        this.resource = resource;
+        this.amount = amount;
+        this.target = target;
+    }
 
-    public Map<String, Float> production;
-    public Map<String, Float> consumption;
-    public Map<String, Integer> internalBuffer;
-    public EntityRef productStorage;
-    public EntityRef consumptionStorage;
-    public int productionInterval;
-    public int consumptionInterval;
+    public int getAmount() {
+        return amount;
+    }
+
+    public EntityRef getTarget() {
+        return target;
+    }
+
+    public String getResource() {
+        return resource;
+    }
 
 }

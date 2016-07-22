@@ -13,32 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.terasology.economy.components;
 
 
 import org.terasology.entitySystem.Component;
+import org.terasology.entitySystem.entity.EntityRef;
 
-import java.util.HashMap;
 import java.util.Map;
 
-public class AdapterLedger implements Component {
-    public int currentID;
-    public Map<String, MarketSubscriber> adapters;
+public class MarketSubscriberComponent implements Component {
 
-    /**
-     * If created for the first time, pass an int value.
-     * The default constructer assures correct un/loading.
-     * @param i
-     */
-    public AdapterLedger(int i) {
-        currentID = 0;
-        adapters = new HashMap<>();
-    }
+    public Map<String, Integer> production;
+    public Map<String, Integer> consumption;
+    public Map<String, Integer> internalBuffer;
+    public EntityRef productStorage;
+    public EntityRef consumptionStorage;
+    public int productionInterval;
 
-    public AdapterLedger() { }
-
-    public void addAdapter(MarketSubscriber adapter) {
-        adapters.put(Integer.toString(currentID), adapter);
-        currentID++;
-    }
 }
