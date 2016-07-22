@@ -38,9 +38,6 @@ import java.util.Collection;
 /**
  * This system keeps track of entities with a MarketSubscriberComponent.
  * It sends the relevant resource requests at the respective interval for every subscriber.
- * It will also suppress resource requests if either
- *              A. the prior produced resources couldn't be stored (there are items in the internal buffer)
- *              B. the resources it consumes were not available
  */
 @Share(value = MarketUpdaterSystem.class)
 @RegisterSystem(RegisterMode.AUTHORITY)
@@ -49,7 +46,6 @@ public class MarketUpdaterSystem extends BaseComponentSystem implements UpdateSu
     private Logger logger = LoggerFactory.getLogger(MarketUpdaterSystem.class);
     private int timer = 0;
     private Multimap<Integer, EntityRef> productionIntervalLedger;
-    private EntityRef subscriberLedgerEntity;
 
     @In
     private AssetManager assetManager;

@@ -40,7 +40,7 @@ public class StorageHandlerLibrary extends BaseComponentSystem {
     private Map<String, StorageComponentHandler> handlerMap = new HashMap<>();
 
     @Override
-    public void postBegin() {
+    public void initialise() {
         handlerMap.put(InfiniteStorageComponent.class.toString(), new InfiniteStorageHandler());
     }
 

@@ -19,6 +19,7 @@ package org.terasology.economy.components;
 
 import org.terasology.entitySystem.Component;
 
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -28,5 +29,10 @@ import java.util.Map;
 public class InfiniteStorageComponent implements Component {
 
     public Map<String, Integer> inventory;
+
+    public InfiniteStorageComponent(int i) {
+        inventory = new HashMap<>();
+    }
+    public InfiniteStorageComponent() { }
 
 }

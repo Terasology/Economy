@@ -30,12 +30,19 @@ import org.terasology.entitySystem.systems.BaseComponentSystem;
 import org.terasology.entitySystem.systems.RegisterMode;
 import org.terasology.entitySystem.systems.RegisterSystem;
 import org.terasology.registry.In;
+import org.terasology.registry.Share;
 
 import java.util.Map;
 
+//TODO: Negative number check
+
 /**
  * This system handles transfer and production events.
+ * It will also suppress resource requests if either
+ *      A. the prior produced resources couldn't be stored (there are items in the internal buffer)
+ *      B. the resources it consumes were not available
  */
+@Share(MarketLogisticSystem.class)
 @RegisterSystem(RegisterMode.AUTHORITY)
 public class MarketLogisticSystem extends BaseComponentSystem {
 
@@ -49,8 +56,8 @@ public class MarketLogisticSystem extends BaseComponentSystem {
         processResourceDraw(event, entityRef);
     }
     @ReceiveEvent
-    public void processResourceStore(RequestResourceDraw event, EntityRef entityRef) {
-        processResourceDraw(event, entityRef);
+    public void passResourceStore(RequestResourceStore event, EntityRef entityRef) {
+        processResourceStore(event, entityRef);
     }
 
     @ReceiveEvent
@@ -156,7 +163,7 @@ public class MarketLogisticSystem extends BaseComponentSystem {
         int storageAmount = event.getAmount() - amountLeft;
         for (Component component : targetStorageComponents.keySet()) {
             storageAmount = targetStorageComponents.get(component).store(component, event.getResource(), storageAmount);
-            entityRef.saveComponent(component);
+            event.getTarget().saveComponent(component);
             if (storageAmount == 0) {
                 break;
             }
