@@ -15,7 +15,6 @@
  */
 package org.terasology.economy.systems;
 
-import com.google.common.collect.Multimap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.terasology.economy.StorageComponentHandler;
@@ -39,25 +38,23 @@ import java.util.Map;
 public class MarketLogisticSystem extends BaseComponentSystem {
 
     private Logger logger = LoggerFactory.getLogger(MarketLogisticSystem.class);
-    private int timer = 0;
-    private Multimap<Integer, EntityRef> productionIntervalLedger;
-    private EntityRef subscriberLedgerEntity;
 
     @In
     private StorageHandlerLibrary storageHandlerLibrary;
 
+    @SuppressWarnings("unchecked")
     @ReceiveEvent
-    public void processResourceDraw(RequestResourceDraw event, EntityRef entityRef) {
+    public int processResourceDraw(RequestResourceDraw event, EntityRef entityRef) {
         Map<Component, StorageComponentHandler> targetStorageComponents = storageHandlerLibrary.getHandlerComponentMapForEntity(event.getTarget());
         Map<Component, StorageComponentHandler> originStorageComponents = storageHandlerLibrary.getHandlerComponentMapForEntity(entityRef);
 
         if(targetStorageComponents.isEmpty()) {
             logger.warn("Attempted to draw out resources from a target with no valid storages. Entity: " + event.getTarget().toString());
-            return;
+            return -1;
         }
         if(originStorageComponents.isEmpty()) {
             logger.warn("Attempted to store resources in an origin with no valid storages. Entity: " + entityRef.toString());
-            return;
+            return -1;
         }
         int availableCapacity = 0;
         for (Component component : originStorageComponents.keySet()) {
@@ -66,6 +63,7 @@ public class MarketLogisticSystem extends BaseComponentSystem {
         int amountLeft = (availableCapacity < event.getAmount()) ? availableCapacity : event.getAmount();
         for (Component component : targetStorageComponents.keySet()) {
             amountLeft = targetStorageComponents.get(component).draw(component, event.getResource(), amountLeft);
+            event.getTarget().saveComponent(component);
             if (amountLeft == 0) {
                 break;
             }
@@ -73,18 +71,49 @@ public class MarketLogisticSystem extends BaseComponentSystem {
         int storageAmount = event.getAmount() - amountLeft;
         for (Component component : originStorageComponents.keySet()) {
             storageAmount = originStorageComponents.get(component).store(component, event.getResource(), storageAmount);
+            entityRef.saveComponent(component);
             if (storageAmount == 0) {
                 break;
             }
         }
-
-
-
+        return amountLeft + storageAmount;
     }
 
+    @SuppressWarnings("unchecked")
     @ReceiveEvent
-    public void processResourceStore(RequestResourceStore event, EntityRef entityRef) {
+    public int processResourceStore(RequestResourceStore event, EntityRef entityRef) {
+        Map<Component, StorageComponentHandler> targetStorageComponents = storageHandlerLibrary.getHandlerComponentMapForEntity(event.getTarget());
+        Map<Component, StorageComponentHandler> originStorageComponents = storageHandlerLibrary.getHandlerComponentMapForEntity(entityRef);
 
+        if(targetStorageComponents.isEmpty()) {
+            logger.warn("Attempted to store resources in a target with no valid storages. Entity: " + event.getTarget().toString());
+            return -1;
+        }
+        if(originStorageComponents.isEmpty()) {
+            logger.warn("Attempted to draw out resources from an origin with no valid storages. Entity: " + entityRef.toString());
+            return -1;
+        }
+        int availableCapacity = 0;
+        for (Component component : targetStorageComponents.keySet()) {
+            availableCapacity += targetStorageComponents.get(component).availableResourceCapacity(component, event.getResource());
+        }
+        int amountLeft = (availableCapacity < event.getAmount()) ? availableCapacity : event.getAmount();
+        for (Component component : originStorageComponents.keySet()) {
+            amountLeft = originStorageComponents.get(component).draw(component, event.getResource(), amountLeft);
+            entityRef.saveComponent(component);
+            if (amountLeft == 0) {
+                break;
+            }
+        }
+        int storageAmount = event.getAmount() - amountLeft;
+        for (Component component : targetStorageComponents.keySet()) {
+            storageAmount = targetStorageComponents.get(component).store(component, event.getResource(), storageAmount);
+            entityRef.saveComponent(component);
+            if (storageAmount == 0) {
+                break;
+            }
+        }
+        return storageAmount + amountLeft;
     }
 
     @ReceiveEvent
