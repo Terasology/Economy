@@ -19,6 +19,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.terasology.economy.StorageComponentHandler;
 import org.terasology.economy.events.RequestConditionedProduction;
+import org.terasology.economy.events.RequestResourceCreation;
+import org.terasology.economy.events.RequestResourceDestruction;
 import org.terasology.economy.events.RequestResourceDraw;
 import org.terasology.economy.events.RequestResourceStore;
 import org.terasology.entitySystem.Component;
@@ -42,18 +44,65 @@ public class MarketLogisticSystem extends BaseComponentSystem {
     @In
     private StorageHandlerLibrary storageHandlerLibrary;
 
-    @SuppressWarnings("unchecked")
     @ReceiveEvent
+    public void passResourceDrawRequest(RequestResourceDraw event, EntityRef entityRef) {
+        processResourceDraw(event, entityRef);
+    }
+    @ReceiveEvent
+    public void processResourceStore(RequestResourceDraw event, EntityRef entityRef) {
+        processResourceDraw(event, entityRef);
+    }
+
+    @ReceiveEvent
+    public void conditionedProduction(RequestConditionedProduction event, EntityRef entityRef) {
+        if (checkResourcesFullyAvailable(event.getConsumptionResourcePackages(), entityRef)
+                && checkCapacityFullyAvailable(event.getProductionResourcePackages(), entityRef)) {
+            for (Map.Entry<String, Integer> resource : event.getConsumptionResourcePackages().entrySet()) {
+                event.getConsumptionStorage().send(new RequestResourceDestruction(resource.getKey(), resource.getValue()));
+            }
+            for (Map.Entry<String, Integer> resource : event.getProductionResourcePackages().entrySet()) {
+                event.getProductionStorage().send(new RequestResourceCreation(resource.getKey(), resource.getValue()));
+            }
+        }
+
+    }
+
+    @ReceiveEvent
+    public void createResource(RequestResourceCreation event, EntityRef entityRef) {
+        processCreateResource(event, entityRef);
+    }
+
+    @ReceiveEvent
+    public void destroyResource(RequestResourceDestruction event, EntityRef entityRef) {
+        Map<Component, StorageComponentHandler> storageComponents = storageHandlerLibrary.getHandlerComponentMapForEntity(entityRef);
+        int amountLeft = event.getAmount();
+
+        if (storageComponents.isEmpty()) {
+            logger.warn("Attempted to destroy resources in a target with no valid storage. Entity: " + entityRef.toString());
+            return;
+        }
+
+        for (Component component : storageComponents.keySet()) {
+            amountLeft = storageComponents.get(component).draw(component, event.getResource(), amountLeft);
+            entityRef.saveComponent(component);
+            if (amountLeft == 0) {
+                break;
+            }
+        }
+    }
+
+
+    @SuppressWarnings("unchecked")
     public int processResourceDraw(RequestResourceDraw event, EntityRef entityRef) {
         Map<Component, StorageComponentHandler> targetStorageComponents = storageHandlerLibrary.getHandlerComponentMapForEntity(event.getTarget());
         Map<Component, StorageComponentHandler> originStorageComponents = storageHandlerLibrary.getHandlerComponentMapForEntity(entityRef);
 
         if(targetStorageComponents.isEmpty()) {
-            logger.warn("Attempted to draw out resources from a target with no valid storages. Entity: " + event.getTarget().toString());
+            logger.warn("Attempted to draw out resources from a target with no valid storage. Entity: " + event.getTarget().toString());
             return -1;
         }
         if(originStorageComponents.isEmpty()) {
-            logger.warn("Attempted to store resources in an origin with no valid storages. Entity: " + entityRef.toString());
+            logger.warn("Attempted to store resources in an origin with no valid storage. Entity: " + entityRef.toString());
             return -1;
         }
         int availableCapacity = 0;
@@ -80,17 +129,16 @@ public class MarketLogisticSystem extends BaseComponentSystem {
     }
 
     @SuppressWarnings("unchecked")
-    @ReceiveEvent
     public int processResourceStore(RequestResourceStore event, EntityRef entityRef) {
         Map<Component, StorageComponentHandler> targetStorageComponents = storageHandlerLibrary.getHandlerComponentMapForEntity(event.getTarget());
         Map<Component, StorageComponentHandler> originStorageComponents = storageHandlerLibrary.getHandlerComponentMapForEntity(entityRef);
 
         if(targetStorageComponents.isEmpty()) {
-            logger.warn("Attempted to store resources in a target with no valid storages. Entity: " + event.getTarget().toString());
+            logger.warn("Attempted to store resources in a target with no valid storage. Entity: " + event.getTarget().toString());
             return -1;
         }
         if(originStorageComponents.isEmpty()) {
-            logger.warn("Attempted to draw out resources from an origin with no valid storages. Entity: " + entityRef.toString());
+            logger.warn("Attempted to draw out resources from an origin with no valid storage. Entity: " + entityRef.toString());
             return -1;
         }
         int availableCapacity = 0;
@@ -116,9 +164,79 @@ public class MarketLogisticSystem extends BaseComponentSystem {
         return storageAmount + amountLeft;
     }
 
-    @ReceiveEvent
-    public void processConditionedProduction(RequestConditionedProduction event, EntityRef entityRef) {
+    private boolean checkResourcesFullyAvailable(Map<String, Integer> resources, EntityRef entityRef) {
+        Map<Component, StorageComponentHandler> targetStorageComponents = storageHandlerLibrary.getHandlerComponentMapForEntity(entityRef);
 
+        if (targetStorageComponents.isEmpty()) {
+            logger.warn("Attempted to check resource availability in a target with no valid storage. Entity: " + entityRef.toString());
+            return false;
+        }
+        for (Map.Entry<String, Integer> resource : resources.entrySet()) {
+            int capacityLeft = resource.getValue();
+            for (Component component : targetStorageComponents.keySet()) {
+                capacityLeft -= targetStorageComponents.get(component).availableResourceAmount(component, resource.getKey());
+            }
+            if (capacityLeft > 0) {
+                return false;
+            }
+        }
+        return true;
+    }
+    private boolean checkCapacityFullyAvailable(Map<String, Integer> resources, EntityRef entityRef) {
+        Map<Component, StorageComponentHandler> targetStorageComponents = storageHandlerLibrary.getHandlerComponentMapForEntity(entityRef);
+
+        if (targetStorageComponents.isEmpty()) {
+            logger.warn("Attempted to check resource capacity in a target with no valid storage. Entity: " + entityRef.toString());
+            return false;
+        }
+        for (Map.Entry<String, Integer> resource : resources.entrySet()) {
+            int capacityLeft = resource.getValue();
+            for (Component component : targetStorageComponents.keySet()) {
+                capacityLeft -= targetStorageComponents.get(component).availableResourceCapacity(component, resource.getKey());
+            }
+            if (capacityLeft > 0) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private int processCreateResource(RequestResourceCreation event, EntityRef entityRef) {
+        Map<Component, StorageComponentHandler> storageComponents = storageHandlerLibrary.getHandlerComponentMapForEntity(entityRef);
+        int amountLeft = event.getAmount();
+
+        if (storageComponents.isEmpty()) {
+            logger.warn("Attempted to create resources in a target with no valid storage. Entity: " + entityRef.toString());
+            return -1;
+        }
+
+        for (Component component : storageComponents.keySet()) {
+            amountLeft = storageComponents.get(component).store(component, event.getResource(), amountLeft);
+            entityRef.saveComponent(component);
+            if (amountLeft == 0) {
+                break;
+            }
+        }
+        return amountLeft;
+    }
+
+    private int processDestroyResource(RequestResourceDestruction event, EntityRef entityRef) {
+        Map<Component, StorageComponentHandler> storageComponents = storageHandlerLibrary.getHandlerComponentMapForEntity(entityRef);
+        int amountLeft = event.getAmount();
+
+        if (storageComponents.isEmpty()) {
+            logger.warn("Attempted to destroy resources in a target with no valid storage. Entity: " + entityRef.toString());
+            return -1;
+        }
+
+        for (Component component : storageComponents.keySet()) {
+            amountLeft = storageComponents.get(component).draw(component, event.getResource(), amountLeft);
+            entityRef.saveComponent(component);
+            if (amountLeft == 0) {
+                break;
+            }
+        }
+        return amountLeft;
     }
 
 
