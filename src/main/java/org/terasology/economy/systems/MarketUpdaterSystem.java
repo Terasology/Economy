@@ -22,9 +22,9 @@ import org.slf4j.LoggerFactory;
 import org.terasology.assets.management.AssetManager;
 import org.terasology.economy.components.MarketSubscriberComponent;
 import org.terasology.economy.events.RequestConditionedProduction;
+import org.terasology.economy.events.SubscriberRegistrationEvent;
 import org.terasology.entitySystem.entity.EntityManager;
 import org.terasology.entitySystem.entity.EntityRef;
-import org.terasology.entitySystem.event.Event;
 import org.terasology.entitySystem.event.ReceiveEvent;
 import org.terasology.entitySystem.systems.BaseComponentSystem;
 import org.terasology.entitySystem.systems.RegisterMode;
@@ -69,7 +69,7 @@ public class MarketUpdaterSystem extends BaseComponentSystem implements UpdateSu
     }
 
     @ReceiveEvent(components = {MarketSubscriberComponent.class})
-    public void registerMarketAdapter(Event event, EntityRef entityRef) {
+    public void registerMarketAdapter(SubscriberRegistrationEvent event, EntityRef entityRef) {
         MarketSubscriberComponent marketSubscriberComponent = entityRef.getComponent(MarketSubscriberComponent.class);
         productionIntervalLedger.put(marketSubscriberComponent.productionInterval, entityRef);
     }
