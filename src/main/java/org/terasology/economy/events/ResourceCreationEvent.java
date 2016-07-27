@@ -18,11 +18,11 @@ package org.terasology.economy.events;
 
 import org.terasology.entitySystem.event.Event;
 
-public class RequestResourceCreation implements Event {
+public class ResourceCreationEvent implements Event {
     private String resource;
     private int amount;
 
-    public RequestResourceCreation(String resource, int amount) {
+    public ResourceCreationEvent(String resource, int amount) {
         this.resource = resource;
         this.amount = amount;
     }

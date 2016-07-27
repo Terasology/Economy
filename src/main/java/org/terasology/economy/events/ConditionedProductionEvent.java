@@ -21,15 +21,15 @@ import org.terasology.entitySystem.event.Event;
 
 import java.util.Map;
 
-public class RequestConditionedProduction implements Event {
+public class ConditionedProductionEvent implements Event {
     private Map<String, Integer> consumptionResourcePackages;
     private Map<String, Integer> productionResourcePackages;
     private EntityRef consumptionStorage;
     private EntityRef productionStorage;
 
-    public RequestConditionedProduction(Map<String, Integer> consumptionResourcePackages,
-                                        Map<String, Integer> productionResourcePackages,
-                                        EntityRef consumptionStorage, EntityRef productionStorage) {
+    public ConditionedProductionEvent(Map<String, Integer> consumptionResourcePackages,
+                                      Map<String, Integer> productionResourcePackages,
+                                      EntityRef consumptionStorage, EntityRef productionStorage) {
         this.consumptionResourcePackages = consumptionResourcePackages;
         this.productionResourcePackages = productionResourcePackages;
         this.consumptionStorage = consumptionStorage;

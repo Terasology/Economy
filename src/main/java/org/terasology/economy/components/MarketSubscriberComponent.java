@@ -20,6 +20,7 @@ package org.terasology.economy.components;
 import org.terasology.entitySystem.Component;
 import org.terasology.entitySystem.entity.EntityRef;
 
+import java.util.HashMap;
 import java.util.Map;
 
 public class MarketSubscriberComponent implements Component {
@@ -30,5 +31,15 @@ public class MarketSubscriberComponent implements Component {
     public EntityRef productStorage;
     public EntityRef consumptionStorage;
     public int productionInterval;
+
+    public MarketSubscriberComponent(int init) {
+        production = new HashMap<>();
+        consumption = new HashMap<>();
+        internalBuffer = new HashMap<>();
+    }
+
+    public MarketSubscriberComponent() {
+
+    }
 
 }

@@ -16,26 +16,19 @@
 package org.terasology.economy.events;
 
 
-import org.terasology.entitySystem.entity.EntityRef;
 import org.terasology.entitySystem.event.Event;
 
-public class RequestResourceDraw implements Event {
+public class ResourceDestructionEvent implements Event {
     private String resource;
     private int amount;
-    private EntityRef target;
 
-    public RequestResourceDraw(String resource, int amount, EntityRef target) {
+    public ResourceDestructionEvent(String resource, int amount) {
         this.resource = resource;
         this.amount = amount;
-        this.target = target;
     }
 
     public int getAmount() {
         return amount;
-    }
-
-    public EntityRef getTarget() {
-        return target;
     }
 
     public String getResource() {

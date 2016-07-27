@@ -19,12 +19,12 @@ package org.terasology.economy.events;
 import org.terasology.entitySystem.entity.EntityRef;
 import org.terasology.entitySystem.event.Event;
 
-public class RequestResourceStore implements Event {
+public class ResourceStoreEvent implements Event {
     private String resource;
     private int amount;
     private EntityRef target;
 
-    public RequestResourceStore(String resource, int amount, EntityRef target) {
+    public ResourceStoreEvent(String resource, int amount, EntityRef target) {
         this.resource = resource;
         this.amount = amount;
         this.target = target;

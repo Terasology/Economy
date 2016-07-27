@@ -22,10 +22,10 @@ import org.mockito.Mockito;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.terasology.economy.components.InfiniteStorageComponent;
-import org.terasology.economy.events.RequestResourceCreation;
-import org.terasology.economy.events.RequestResourceDestruction;
-import org.terasology.economy.events.RequestResourceDraw;
-import org.terasology.economy.events.RequestResourceStore;
+import org.terasology.economy.events.ResourceCreationEvent;
+import org.terasology.economy.events.ResourceDestructionEvent;
+import org.terasology.economy.events.ResourceDrawEvent;
+import org.terasology.economy.events.ResourceStoreEvent;
 import org.terasology.entitySystem.entity.EntityManager;
 import org.terasology.entitySystem.entity.EntityRef;
 import org.terasology.entitySystem.entity.internal.PojoEntityManager;
@@ -64,9 +64,9 @@ public class BrokenTestSystem {
 
     @Test
     public void createAndDestroy() {
-        storageA.send(new RequestResourceCreation("JellyBeans", 10));
-        storageB.send(new RequestResourceCreation("Waffles", 10));
-        storageB.send(new RequestResourceDestruction("Waffles", 10));
+        storageA.send(new ResourceCreationEvent("JellyBeans", 10));
+        storageB.send(new ResourceCreationEvent("Waffles", 10));
+        storageB.send(new ResourceDestructionEvent("Waffles", 10));
         InfiniteStorageComponent containerA = storageA.getComponent(InfiniteStorageComponent.class);
         InfiniteStorageComponent containerB = storageB.getComponent(InfiniteStorageComponent.class);
 
@@ -82,8 +82,8 @@ public class BrokenTestSystem {
         Map<String, Integer> correctInvA = new HashMap<>();
         Map<String, Integer> correctInvB = new HashMap<>();
 
-        storageA.send(new RequestResourceCreation("JellyBeans", 10));
-        storageB.send(new RequestResourceDraw("JellyBeans", 10, storageA));
+        storageA.send(new ResourceCreationEvent("JellyBeans", 10));
+        storageB.send(new ResourceDrawEvent("JellyBeans", 10, storageA));
 
         InfiniteStorageComponent containerA = storageA.getComponent(InfiniteStorageComponent.class);
         InfiniteStorageComponent containerB = storageB.getComponent(InfiniteStorageComponent.class);
@@ -99,8 +99,8 @@ public class BrokenTestSystem {
         Map<String, Integer> correctInvA = new HashMap<>();
         Map<String, Integer> correctInvB = new HashMap<>();
 
-        storageA.send(new RequestResourceCreation("JellyBeans", 10));
-        storageA.send(new RequestResourceStore("JellyBeans", 10, storageB));
+        storageA.send(new ResourceCreationEvent("JellyBeans", 10));
+        storageA.send(new ResourceStoreEvent("JellyBeans", 10, storageB));
 
         InfiniteStorageComponent containerA = storageA.getComponent(InfiniteStorageComponent.class);
         InfiniteStorageComponent containerB = storageB.getComponent(InfiniteStorageComponent.class);

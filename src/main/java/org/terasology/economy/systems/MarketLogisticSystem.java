@@ -18,11 +18,11 @@ package org.terasology.economy.systems;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.terasology.economy.StorageComponentHandler;
-import org.terasology.economy.events.RequestConditionedProduction;
-import org.terasology.economy.events.RequestResourceCreation;
-import org.terasology.economy.events.RequestResourceDestruction;
-import org.terasology.economy.events.RequestResourceDraw;
-import org.terasology.economy.events.RequestResourceStore;
+import org.terasology.economy.events.ConditionedProductionEvent;
+import org.terasology.economy.events.ResourceCreationEvent;
+import org.terasology.economy.events.ResourceDestructionEvent;
+import org.terasology.economy.events.ResourceDrawEvent;
+import org.terasology.economy.events.ResourceStoreEvent;
 import org.terasology.entitySystem.Component;
 import org.terasology.entitySystem.entity.EntityRef;
 import org.terasology.entitySystem.event.ReceiveEvent;
@@ -52,41 +52,41 @@ public class MarketLogisticSystem extends BaseComponentSystem {
     private StorageHandlerLibrary storageHandlerLibrary;
 
     @ReceiveEvent
-    public void passResourceDrawRequest(RequestResourceDraw event, EntityRef entityRef) {
+    public void passResourceDrawRequest(ResourceDrawEvent event, EntityRef entityRef) {
         processResourceDraw(event, entityRef);
     }
     @ReceiveEvent
-    public void passResourceStore(RequestResourceStore event, EntityRef entityRef) {
+    public void passResourceStore(ResourceStoreEvent event, EntityRef entityRef) {
         processResourceStore(event, entityRef);
     }
 
     @ReceiveEvent
-    public void conditionedProduction(RequestConditionedProduction event, EntityRef entityRef) {
+    public void conditionedProduction(ConditionedProductionEvent event, EntityRef entityRef) {
         if (checkResourcesFullyAvailable(event.getConsumptionResourcePackages(), entityRef)
                 && checkCapacityFullyAvailable(event.getProductionResourcePackages(), entityRef)) {
             for (Map.Entry<String, Integer> resource : event.getConsumptionResourcePackages().entrySet()) {
-                event.getConsumptionStorage().send(new RequestResourceDestruction(resource.getKey(), resource.getValue()));
+                event.getConsumptionStorage().send(new ResourceDestructionEvent(resource.getKey(), resource.getValue()));
             }
             for (Map.Entry<String, Integer> resource : event.getProductionResourcePackages().entrySet()) {
-                event.getProductionStorage().send(new RequestResourceCreation(resource.getKey(), resource.getValue()));
+                event.getProductionStorage().send(new ResourceCreationEvent(resource.getKey(), resource.getValue()));
             }
         }
 
     }
 
     @ReceiveEvent
-    public void createResource(RequestResourceCreation event, EntityRef entityRef) {
+    public void createResource(ResourceCreationEvent event, EntityRef entityRef) {
         processCreateResource(event, entityRef);
     }
 
     @ReceiveEvent
-    public void destroyResource(RequestResourceDestruction event, EntityRef entityRef) {
+    public void destroyResource(ResourceDestructionEvent event, EntityRef entityRef) {
         processDestroyResource(event, entityRef);
     }
 
 
     @SuppressWarnings("unchecked")
-    public int processResourceDraw(RequestResourceDraw event, EntityRef entityRef) {
+    public int processResourceDraw(ResourceDrawEvent event, EntityRef entityRef) {
         Map<Component, StorageComponentHandler> targetStorageComponents = storageHandlerLibrary.getHandlerComponentMapForEntity(event.getTarget());
         Map<Component, StorageComponentHandler> originStorageComponents = storageHandlerLibrary.getHandlerComponentMapForEntity(entityRef);
 
@@ -122,7 +122,7 @@ public class MarketLogisticSystem extends BaseComponentSystem {
     }
 
     @SuppressWarnings("unchecked")
-    public int processResourceStore(RequestResourceStore event, EntityRef entityRef) {
+    public int processResourceStore(ResourceStoreEvent event, EntityRef entityRef) {
         Map<Component, StorageComponentHandler> targetStorageComponents = storageHandlerLibrary.getHandlerComponentMapForEntity(event.getTarget());
         Map<Component, StorageComponentHandler> originStorageComponents = storageHandlerLibrary.getHandlerComponentMapForEntity(entityRef);
 
@@ -194,7 +194,7 @@ public class MarketLogisticSystem extends BaseComponentSystem {
         return true;
     }
 
-    private int processCreateResource(RequestResourceCreation event, EntityRef entityRef) {
+    private int processCreateResource(ResourceCreationEvent event, EntityRef entityRef) {
         Map<Component, StorageComponentHandler> storageComponents = storageHandlerLibrary.getHandlerComponentMapForEntity(entityRef);
         int amountLeft = event.getAmount();
 
@@ -213,7 +213,7 @@ public class MarketLogisticSystem extends BaseComponentSystem {
         return amountLeft;
     }
 
-    private int processDestroyResource(RequestResourceDestruction event, EntityRef entityRef) {
+    private int processDestroyResource(ResourceDestructionEvent event, EntityRef entityRef) {
         Map<Component, StorageComponentHandler> storageComponents = storageHandlerLibrary.getHandlerComponentMapForEntity(entityRef);
         int amountLeft = event.getAmount();
 
