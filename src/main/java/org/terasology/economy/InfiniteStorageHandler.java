@@ -17,11 +17,13 @@ package org.terasology.economy;
 
 
 import org.terasology.economy.components.InfiniteStorageComponent;
+import org.terasology.entitySystem.Component;
 
 import java.util.Map;
 
 public class InfiniteStorageHandler implements StorageComponentHandler<InfiniteStorageComponent> {
 
+    public InfiniteStorageHandler() {}
     @Override
     public int store(InfiniteStorageComponent infiniteStorageComponent, String resource, int amount) {
         Map<String, Integer> inventory = infiniteStorageComponent.inventory;
@@ -63,5 +65,14 @@ public class InfiniteStorageHandler implements StorageComponentHandler<InfiniteS
     @Override
     public Class getStorageComponentClass() {
         return InfiniteStorageComponent.class;
+    }
+
+    @Override
+    public Component getTestComponent() {
+        return new InfiniteStorageComponent(1);
+    }
+    @Override
+    public String getTestResource() {
+        return "testResource";
     }
 }

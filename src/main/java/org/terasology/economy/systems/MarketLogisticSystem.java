@@ -81,21 +81,7 @@ public class MarketLogisticSystem extends BaseComponentSystem {
 
     @ReceiveEvent
     public void destroyResource(RequestResourceDestruction event, EntityRef entityRef) {
-        Map<Component, StorageComponentHandler> storageComponents = storageHandlerLibrary.getHandlerComponentMapForEntity(entityRef);
-        int amountLeft = event.getAmount();
-
-        if (storageComponents.isEmpty()) {
-            logger.warn("Attempted to destroy resources in a target with no valid storage. Entity: " + entityRef.toString());
-            return;
-        }
-
-        for (Component component : storageComponents.keySet()) {
-            amountLeft = storageComponents.get(component).draw(component, event.getResource(), amountLeft);
-            entityRef.saveComponent(component);
-            if (amountLeft == 0) {
-                break;
-            }
-        }
+        processDestroyResource(event, entityRef);
     }
 
 

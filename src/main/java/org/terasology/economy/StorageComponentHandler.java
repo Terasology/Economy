@@ -49,4 +49,8 @@ public interface StorageComponentHandler<T extends Component> {
     int availableResourceCapacity(T storage, String resource);
 
     Class getStorageComponentClass();
+
+    Component getTestComponent();
+
+    String getTestResource();
 }

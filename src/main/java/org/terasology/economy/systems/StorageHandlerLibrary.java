@@ -22,10 +22,12 @@ import org.terasology.economy.InfiniteStorageHandler;
 import org.terasology.economy.StorageComponentHandler;
 import org.terasology.economy.components.InfiniteStorageComponent;
 import org.terasology.entitySystem.Component;
+import org.terasology.entitySystem.entity.EntityManager;
 import org.terasology.entitySystem.entity.EntityRef;
 import org.terasology.entitySystem.systems.BaseComponentSystem;
 import org.terasology.entitySystem.systems.RegisterMode;
 import org.terasology.entitySystem.systems.RegisterSystem;
+import org.terasology.registry.In;
 import org.terasology.registry.Share;
 
 import java.util.HashMap;
@@ -39,13 +41,24 @@ public class StorageHandlerLibrary extends BaseComponentSystem {
     private Logger logger = LoggerFactory.getLogger(StorageHandlerLibrary.class);
     private Map<String, StorageComponentHandler> handlerMap = new HashMap<>();
 
+    @In
+    TestSystem testSystem;
+    @In
+    EntityManager entityManager;
     @Override
-    public void initialise() {
-        handlerMap.put(InfiniteStorageComponent.class.toString(), new InfiniteStorageHandler());
+    public void postBegin() {
+        registerHandler(new InfiniteStorageHandler());
     }
 
     public void registerHandler(StorageComponentHandler handler) {
+        testSystem.setStorageHandlerLibrary(this);
         handlerMap.put(handler.getStorageComponentClass().toString(), handler);
+        if (testSystem.testStorageComponent(handler)) {
+            logger.info("Registered new StorageComponentHandler " + handler.getClass().getName());
+            return;
+        }
+        handlerMap.remove(handler.getStorageComponentClass().toString(), handler);
+        logger.error("Could not register StorageComponentHandler " + handler.getClass().getName());
     }
 
     public Map<Component, StorageComponentHandler> getHandlerComponentMapForEntity(EntityRef entityRef) {
