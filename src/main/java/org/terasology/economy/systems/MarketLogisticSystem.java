@@ -62,13 +62,17 @@ public class MarketLogisticSystem extends BaseComponentSystem {
 
     @ReceiveEvent
     public void conditionedProduction(ConditionedProductionEvent event, EntityRef entityRef) {
-        if (checkResourcesFullyAvailable(event.getConsumptionResourcePackages(), entityRef)
-                && checkCapacityFullyAvailable(event.getProductionResourcePackages(), entityRef)) {
-            for (Map.Entry<String, Integer> resource : event.getConsumptionResourcePackages().entrySet()) {
-                event.getConsumptionStorage().send(new ResourceDestructionEvent(resource.getKey(), resource.getValue()));
+        if ((event.getConsumptionResourcePackages() == null || checkResourcesFullyAvailable(event.getConsumptionResourcePackages(), entityRef))
+                && (event.getConsumptionResourcePackages() == null || checkCapacityFullyAvailable(event.getProductionResourcePackages(), entityRef))) {
+            if (event.getConsumptionResourcePackages() != null) {
+                for (Map.Entry<String, Integer> resource : event.getConsumptionResourcePackages().entrySet()) {
+                    event.getConsumptionStorage().send(new ResourceDestructionEvent(resource.getKey(), resource.getValue()));
+                }
             }
-            for (Map.Entry<String, Integer> resource : event.getProductionResourcePackages().entrySet()) {
-                event.getProductionStorage().send(new ResourceCreationEvent(resource.getKey(), resource.getValue()));
+            if (event.getProductionResourcePackages() != null) {
+                for (Map.Entry<String, Integer> resource : event.getProductionResourcePackages().entrySet()) {
+                    event.getProductionStorage().send(new ResourceCreationEvent(resource.getKey(), resource.getValue()));
+                }
             }
         }
 

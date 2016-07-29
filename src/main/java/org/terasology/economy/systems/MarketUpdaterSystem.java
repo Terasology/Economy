@@ -66,9 +66,10 @@ public class MarketUpdaterSystem extends BaseComponentSystem implements UpdateSu
                 entities.forEach(this::processSubscriber);
             }
         }
+        timer++;
     }
 
-    @ReceiveEvent
+    @ReceiveEvent(components = MarketSubscriberComponent.class)
     public void registerMarketAdapter(SubscriberRegistrationEvent event, EntityRef entityRef) {
         MarketSubscriberComponent marketSubscriberComponent = entityRef.getComponent(MarketSubscriberComponent.class);
         productionIntervalLedger.put(marketSubscriberComponent.productionInterval, entityRef);

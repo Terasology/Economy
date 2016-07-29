@@ -19,10 +19,12 @@ package org.terasology.economy.components;
 
 import org.terasology.entitySystem.Component;
 import org.terasology.entitySystem.entity.EntityRef;
+import org.terasology.reflection.MappedContainer;
 
 import java.util.HashMap;
 import java.util.Map;
 
+@MappedContainer
 public class MarketSubscriberComponent implements Component {
 
     public Map<String, Integer> production;
