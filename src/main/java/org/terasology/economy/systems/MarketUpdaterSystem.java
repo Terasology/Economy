@@ -77,6 +77,12 @@ public class MarketUpdaterSystem extends BaseComponentSystem implements UpdateSu
 
     public void processSubscriber(EntityRef entity) {
         MarketSubscriberComponent marketSubscriberComponent = entity.getComponent(MarketSubscriberComponent.class);
+        if (entity == null) {
+            logger.error("Entity is not available for processing as market subscriber.");
+        }
+        if (marketSubscriberComponent == null) {
+            logger.error("Entity has no valid MarketSubscriberComponent. Entity: " + entity.toFullDescription());
+        }
         entity.send(new ConditionedProductionEvent(marketSubscriberComponent.consumption, marketSubscriberComponent.production,
                 marketSubscriberComponent.consumptionStorage, marketSubscriberComponent.productStorage));
     }
