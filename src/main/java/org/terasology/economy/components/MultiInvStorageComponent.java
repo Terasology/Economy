@@ -13,18 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.terasology.economy.ui.market.events;
+package org.terasology.economy.components;
 
+import org.terasology.entitySystem.Component;
+import org.terasology.entitySystem.entity.EntityRef;
 
+import java.util.List;
 
-import org.terasology.entitySystem.event.Event;
-
-public class MarketScreenRequestEvent implements Event{
-    public long market;
-
-    public MarketScreenRequestEvent(long market) {
-        this.market = market;
-    }
-
-    public MarketScreenRequestEvent() {}
+/**
+ * This stores references to chests for a building entity. They are distinguished into chests to draw resources from and chests to store into.
+ */
+public class MultiInvStorageComponent implements Component {
+    public List<EntityRef> chests;
 }

@@ -18,9 +18,8 @@ package org.terasology.economy.systems;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.terasology.economy.InfiniteStorageHandler;
-import org.terasology.economy.StorageComponentHandler;
-import org.terasology.economy.components.InfiniteStorageComponent;
+import org.terasology.economy.handler.InfiniteStorageHandler;
+import org.terasology.economy.handler.StorageComponentHandler;
 import org.terasology.entitySystem.Component;
 import org.terasology.entitySystem.entity.EntityManager;
 import org.terasology.entitySystem.entity.EntityRef;

@@ -17,12 +17,13 @@ package org.terasology.economy.systems;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.terasology.economy.StorageComponentHandler;
 import org.terasology.economy.events.ConditionedProductionEvent;
 import org.terasology.economy.events.ResourceCreationEvent;
 import org.terasology.economy.events.ResourceDestructionEvent;
 import org.terasology.economy.events.ResourceDrawEvent;
+import org.terasology.economy.events.ResourceInfoRequestEvent;
 import org.terasology.economy.events.ResourceStoreEvent;
+import org.terasology.economy.handler.StorageComponentHandler;
 import org.terasology.entitySystem.Component;
 import org.terasology.entitySystem.entity.EntityRef;
 import org.terasology.entitySystem.event.ReceiveEvent;
@@ -32,7 +33,9 @@ import org.terasology.entitySystem.systems.RegisterSystem;
 import org.terasology.registry.In;
 import org.terasology.registry.Share;
 
+import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 //TODO: Negative number check
 
@@ -88,6 +91,24 @@ public class MarketLogisticSystem extends BaseComponentSystem {
         processDestroyResource(event, entityRef);
     }
 
+    @SuppressWarnings("unchecked")
+    @ReceiveEvent
+    public void onResourceInfoRequest(ResourceInfoRequestEvent event, EntityRef entityRef) {
+        event.resources = new HashMap<>();
+        Map<Component, StorageComponentHandler> storageComponentHandlers = storageHandlerLibrary.getHandlerComponentMapForEntity(entityRef);
+        for (Map.Entry<Component, StorageComponentHandler> entry : storageComponentHandlers.entrySet()) {
+            Set<String> componentResourceTypes = entry.getValue().availableResourceTypes(entry.getKey());
+            for (String resource : componentResourceTypes) {
+                int amount = entry.getValue().availableResourceAmount(entry.getKey(), resource);
+                if (event.resources.containsKey(resource)) {
+                    event.resources.replace(resource, event.resources.get(resource) + amount);
+                } else {
+                    event.resources.put(resource, amount);
+                }
+            }
+        }
+        event.isHandled = true;
+    }
 
     @SuppressWarnings("unchecked")
     public int processResourceDraw(ResourceDrawEvent event, EntityRef entityRef) {

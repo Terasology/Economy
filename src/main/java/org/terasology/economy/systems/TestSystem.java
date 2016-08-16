@@ -17,12 +17,12 @@ package org.terasology.economy.systems;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.terasology.economy.StorageComponentHandler;
 import org.terasology.economy.events.ConditionedProductionEvent;
 import org.terasology.economy.events.ResourceCreationEvent;
 import org.terasology.economy.events.ResourceDestructionEvent;
 import org.terasology.economy.events.ResourceDrawEvent;
 import org.terasology.economy.events.ResourceStoreEvent;
+import org.terasology.economy.handler.StorageComponentHandler;
 import org.terasology.entitySystem.Component;
 import org.terasology.entitySystem.entity.EntityManager;
 import org.terasology.entitySystem.entity.EntityRef;

@@ -13,13 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.terasology.economy;
+package org.terasology.economy.handler;
 
 
 import org.terasology.economy.components.InfiniteStorageComponent;
 import org.terasology.entitySystem.Component;
 
 import java.util.Map;
+import java.util.Set;
 
 public class InfiniteStorageHandler implements StorageComponentHandler<InfiniteStorageComponent> {
 
@@ -60,6 +61,11 @@ public class InfiniteStorageHandler implements StorageComponentHandler<InfiniteS
     @Override
     public int availableResourceCapacity(InfiniteStorageComponent infiniteStorageComponent, String resource) {
         return Integer.MAX_VALUE;
+    }
+
+    @Override
+    public Set<String> availableResourceTypes(InfiniteStorageComponent infiniteStorageComponent) {
+        return infiniteStorageComponent.inventory.keySet();
     }
 
     @Override

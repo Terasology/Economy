@@ -13,10 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.terasology.economy;
+package org.terasology.economy.handler;
 
 
 import org.terasology.entitySystem.Component;
+
+import java.util.Set;
 
 public interface StorageComponentHandler<T extends Component> {
 
@@ -47,6 +49,8 @@ public interface StorageComponentHandler<T extends Component> {
      * @return The amount of that resource type which can be stored inside that container
      */
     int availableResourceCapacity(T storage, String resource);
+
+    Set<String> availableResourceTypes(T storage);
 
     Class getStorageComponentClass();
 
