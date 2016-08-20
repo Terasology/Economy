@@ -35,9 +35,11 @@ import org.terasology.logic.inventory.InventoryUtils;
 import org.terasology.logic.inventory.ItemComponent;
 import org.terasology.registry.In;
 import org.terasology.registry.Share;
+import org.terasology.utilities.Assets;
 import org.terasology.world.block.BlockManager;
 import org.terasology.world.block.entity.BlockCommands;
 import org.terasology.world.block.family.BlockFamily;
+import org.terasology.world.block.items.BlockItemComponent;
 import org.terasology.world.block.items.BlockItemFactory;
 
 import java.util.ArrayList;
@@ -69,10 +71,16 @@ public class MultiInvStorageHandler extends BaseComponentSystem implements Stora
 
     private BlockItemFactory blockItemFactory;
     private Logger logger = LoggerFactory.getLogger(MultiInvStorageHandler.class);
+    private ResourceUrn blockItemBase;
 
     @Override
     public void initialise() {
         blockItemFactory = new BlockItemFactory(entityManager);
+    }
+
+    @Override
+    public void postBegin() {
+        blockItemBase = Assets.getPrefab("engine:blockItemBase").get().getUrn();
     }
 
     @Override
@@ -198,7 +206,7 @@ public class MultiInvStorageHandler extends BaseComponentSystem implements Stora
                     BlockFamily blockFamily = blockManager.getBlockFamily(resource);
                     EntityRef item = blockItemFactory.newInstance(blockFamily, 1);
                     if (!item.exists()) {
-                        throw new IllegalArgumentException("Unknown block or item");
+                        return EntityRef.NULL;
                     }
                     return item;
                 }
@@ -218,8 +226,9 @@ public class MultiInvStorageHandler extends BaseComponentSystem implements Stora
         int amount = 0;
         int slotCount = InventoryUtils.getSlotCount(entityRef);
         for (int i = 0; i < slotCount; i++) {
-            if (InventoryUtils.isSameItem(InventoryUtils.getItemAt(entityRef, i), item)) {
-                amount += InventoryUtils.getStackCount(InventoryUtils.getItemAt(entityRef, i));
+            EntityRef targetItem = InventoryUtils.getItemAt(entityRef, i);
+            if (isSameItem(item, targetItem)) {
+                amount += InventoryUtils.getStackCount(targetItem);
             }
         }
         return amount;
@@ -243,10 +252,11 @@ public class MultiInvStorageHandler extends BaseComponentSystem implements Stora
         return capacity;
     }
 
-    private int getSlotWithItem(EntityRef entity, EntityRef item) {
-        int slotCount = InventoryUtils.getSlotCount(entity);
+    private int getSlotWithItem(EntityRef entityRef, EntityRef item) {
+        int slotCount = InventoryUtils.getSlotCount(entityRef);
         for (int i = 0; i < slotCount; i++) {
-            if (InventoryUtils.isSameItem(InventoryUtils.getItemAt(entity, i), item)) {
+            EntityRef slotItem = InventoryUtils.getItemAt(entityRef, i);
+            if (isSameItem(item, slotItem)) {
                 return i;
             }
         }
@@ -258,10 +268,22 @@ public class MultiInvStorageHandler extends BaseComponentSystem implements Stora
         InventoryComponent inventoryComponent = entity.getComponent(InventoryComponent.class);
         for(EntityRef item : inventoryComponent.itemSlots) {
             ItemComponent itemComponent = item.getComponent(ItemComponent.class);
-            if (!set.contains(itemComponent.stackId)) {
-                set.add(itemComponent.stackId);
+            if (itemComponent != null && !set.contains(itemComponent.stackId)) {
+                ResourceUrn uri = item.getParentPrefab().getUrn();
+                if (uri == blockItemBase) {
+                    set.add(item.getComponent(BlockItemComponent.class).blockFamily.getURI().toString());
+                } else {
+                    set.add(uri.toString());
+                }
             }
         }
         return set;
+    }
+
+    private boolean isSameItem(EntityRef item, EntityRef targetItem) {
+        if (!item.hasComponent(ItemComponent.class) || !targetItem.hasComponent(ItemComponent.class)) {
+            return false;
+        }
+        return targetItem.getComponent(ItemComponent.class).stackId.equals(item.getComponent(ItemComponent.class).stackId);
     }
 }
