@@ -266,6 +266,9 @@ public class MultiInvStorageHandler extends BaseComponentSystem implements Stora
     private Set<String> getResourceTypesOfInventory(EntityRef entity) {
         Set<String> set = new HashSet<>();
         InventoryComponent inventoryComponent = entity.getComponent(InventoryComponent.class);
+        if (!entity.exists() || !entity.isActive()) {
+            return set;
+        }
         for(EntityRef item : inventoryComponent.itemSlots) {
             ItemComponent itemComponent = item.getComponent(ItemComponent.class);
             if (itemComponent != null && !set.contains(itemComponent.stackId)) {

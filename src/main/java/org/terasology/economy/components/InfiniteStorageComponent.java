@@ -33,6 +33,7 @@ public class InfiniteStorageComponent implements Component {
     public InfiniteStorageComponent(int i) {
         inventory = new HashMap<>();
     }
-    public InfiniteStorageComponent() { }
+
+    public InfiniteStorageComponent() {}
 
 }

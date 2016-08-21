@@ -17,6 +17,7 @@ package org.terasology.economy.systems;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.terasology.economy.components.InfiniteStorageComponent;
 import org.terasology.economy.events.ConditionedProductionEvent;
 import org.terasology.economy.events.ResourceCreationEvent;
 import org.terasology.economy.events.ResourceDestructionEvent;
@@ -25,6 +26,7 @@ import org.terasology.economy.events.ResourceInfoRequestEvent;
 import org.terasology.economy.events.ResourceStoreEvent;
 import org.terasology.economy.handler.StorageComponentHandler;
 import org.terasology.entitySystem.Component;
+import org.terasology.entitySystem.entity.EntityManager;
 import org.terasology.entitySystem.entity.EntityRef;
 import org.terasology.entitySystem.event.ReceiveEvent;
 import org.terasology.entitySystem.systems.BaseComponentSystem;
@@ -54,6 +56,20 @@ public class MarketLogisticSystem extends BaseComponentSystem {
     @In
     private StorageHandlerLibrary storageHandlerLibrary;
 
+    @In
+    private EntityManager entityManager;
+    @Override
+    public void postBegin() {
+        Iterable<EntityRef> infiniteStorageEntities = entityManager.getEntitiesWith(InfiniteStorageComponent.class);
+        if (infiniteStorageEntities.iterator().hasNext()) {
+            for (EntityRef storageEntity : infiniteStorageEntities) {
+                InfiniteStorageComponent infiniteStorageComponent = storageEntity.getComponent(InfiniteStorageComponent.class);
+                if (infiniteStorageComponent.inventory == null) {
+                    infiniteStorageComponent.inventory = new HashMap<>();
+                }
+            }
+        }
+    }
     @ReceiveEvent
     public void passResourceDrawRequest(ResourceDrawEvent event, EntityRef entityRef) {
         processResourceDraw(event, entityRef);
