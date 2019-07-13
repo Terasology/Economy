@@ -1,0 +1,44 @@
+{
+    "type": "WalletHud",
+    "skin": "engine:default",
+    "contents": {
+        "type": "relativeLayout",
+        "contents": [
+            {
+                "type": "UIBox",
+                "id": "wallet",
+                "contents": [
+                    {
+                        "type": "UIText",
+                        "text": "SAMPLE TEXT",
+                        "id": "amount",
+                        "layoutInfo": {
+                            "position-top": {},
+                            "position-bottom": {}
+                        },
+                        "multiline": false,
+                        "readOnly": true
+                    }
+                ],
+                "layoutInfo": {
+                    "width": 100,
+                    "height": 50,
+                    "position-left": {
+                        "target": "LEFT",
+                        "offset": 200
+                    },
+                    "position-bottom": {}
+                }
+            }
+        ],
+        "layoutInfo": {
+            "position-left": {
+                "target": "LEFT",
+                "offset": 400
+            },
+            "position-bottom": {
+                "target": "BOTTOM"
+            }
+        }
+    }
+}
