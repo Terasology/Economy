@@ -18,11 +18,12 @@ package org.terasology.economy.ui;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.terasology.economy.components.CurrencyStorageComponent;
-import org.terasology.economy.systems.CurrencySystem;
+import org.terasology.economy.systems.WalletSystem;
 import org.terasology.logic.players.LocalPlayer;
 import org.terasology.registry.In;
+import org.terasology.rendering.nui.databinding.Binding;
 import org.terasology.rendering.nui.layers.hud.CoreHudWidget;
-import org.terasology.rendering.nui.widgets.UIText;
+import org.terasology.rendering.nui.widgets.UILabel;
 
 public class WalletHud extends CoreHudWidget {
 
@@ -30,23 +31,37 @@ public class WalletHud extends CoreHudWidget {
     private LocalPlayer localPlayer;
 
     @In
-    private CurrencySystem currencySystem;
+    private WalletSystem walletSystem;
 
-    private UIText text;
+    private UILabel label;
 
     private Logger logger = LoggerFactory.getLogger(WalletHud.class);
 
     @Override
     public void initialise() {
-        text = find("amount", UIText.class);
+        label = find("walletInfoLabel", UILabel.class);
     }
 
     @Override
     public void onOpened() {
-        CurrencyStorageComponent component = currencySystem.wallet.getComponent(CurrencyStorageComponent.class);
-        if (text != null) {
-            text.setText(String.valueOf(component.amount));
-        }
         super.onOpened();
+        CurrencyStorageComponent component = walletSystem.wallet.getComponent(CurrencyStorageComponent.class);
+        if (label != null) {
+            label.bindText(new Binding<String>() {
+                @Override
+                public String get() {
+                    return String.valueOf(component.amount);
+                }
+
+                @Override
+                public void set(String value) {
+                    try {
+                        component.amount = Integer.parseInt(value);
+                    } catch (Exception e) {
+                        logger.warn("Cannot set wallet amount. Exception: {}", e.getMessage());
+                    }
+                }
+            });
+        }
     }
 }

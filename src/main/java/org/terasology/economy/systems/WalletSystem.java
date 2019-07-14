@@ -16,13 +16,9 @@
 package org.terasology.economy.systems;
 
 import org.terasology.assets.management.AssetManager;
-import org.terasology.economy.components.CurrencyComponent;
 import org.terasology.economy.components.CurrencyStorageComponent;
-import org.terasology.economy.components.MarketSubscriberComponent;
-import org.terasology.economy.events.SubscriberRegistrationEvent;
 import org.terasology.entitySystem.entity.EntityManager;
 import org.terasology.entitySystem.entity.EntityRef;
-import org.terasology.entitySystem.prefab.Prefab;
 import org.terasology.entitySystem.systems.BaseComponentSystem;
 import org.terasology.entitySystem.systems.RegisterMode;
 import org.terasology.entitySystem.systems.RegisterSystem;
@@ -31,11 +27,9 @@ import org.terasology.registry.In;
 import org.terasology.registry.Share;
 import org.terasology.rendering.nui.NUIManager;
 
-import java.util.Set;
-
-@Share(CurrencySystem.class)
+@Share(WalletSystem.class)
 @RegisterSystem(RegisterMode.AUTHORITY)
-public class CurrencySystem extends BaseComponentSystem {
+public class WalletSystem extends BaseComponentSystem {
 
     @In
     private EntityManager entityManager;
@@ -49,8 +43,6 @@ public class CurrencySystem extends BaseComponentSystem {
     @In
     private LocalPlayer localPlayer;
 
-    private EntityRef bank;
-    private EntityRef currency;
     public EntityRef wallet;
 
     @Override
@@ -58,26 +50,7 @@ public class CurrencySystem extends BaseComponentSystem {
         CurrencyStorageComponent component = new CurrencyStorageComponent(100);
         wallet = entityManager.create();
         wallet.addComponent(component);
+
         nuiManager.getHUD().addHUDElement("walletHud");
-
-        Set<Prefab> loadedPrefabs = assetManager.getLoadedAssets(Prefab.class);
-        for (Prefab prefab : loadedPrefabs) {
-            if (prefab.hasComponent(CurrencyStorageComponent.class)) {
-                bank = entityManager.create(prefab);
-                CurrencyStorageComponent bankComponent = bank.getComponent(CurrencyStorageComponent.class);
-                bank.saveComponent(bankComponent);
-            }
-
-            if (prefab.hasComponent(CurrencyComponent.class)) {
-                EntityRef currency = entityManager.create(prefab);
-                MarketSubscriberComponent marketSubscriberComponent = currency.getComponent(MarketSubscriberComponent.class);
-                marketSubscriberComponent.productStorage = bank;
-                marketSubscriberComponent.productionInterval = 2;
-                currency.saveComponent(marketSubscriberComponent);
-
-                currency.send(new SubscriberRegistrationEvent());
-                this.currency = currency;
-            }
-        }
     }
 }
