@@ -17,8 +17,10 @@ package org.terasology.economy.systems;
 
 import org.terasology.assets.management.AssetManager;
 import org.terasology.economy.components.CurrencyStorageComponent;
+import org.terasology.economy.events.UpdateWalletEvent;
 import org.terasology.entitySystem.entity.EntityManager;
 import org.terasology.entitySystem.entity.EntityRef;
+import org.terasology.entitySystem.event.ReceiveEvent;
 import org.terasology.entitySystem.systems.BaseComponentSystem;
 import org.terasology.entitySystem.systems.RegisterMode;
 import org.terasology.entitySystem.systems.RegisterSystem;
@@ -52,5 +54,12 @@ public class WalletSystem extends BaseComponentSystem {
         wallet.addComponent(component);
 
         nuiManager.getHUD().addHUDElement("walletHud");
+    }
+
+    @ReceiveEvent
+    private void onUpdateWallet(UpdateWalletEvent event, EntityRef entity) {
+        CurrencyStorageComponent component = wallet.getComponent(CurrencyStorageComponent.class);
+        component.amount += event.getDelta();
+        entity.saveComponent(component);
     }
 }
