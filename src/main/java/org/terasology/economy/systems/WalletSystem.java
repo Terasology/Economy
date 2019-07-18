@@ -56,9 +56,9 @@ public class WalletSystem extends BaseComponentSystem {
         nuiManager.getHUD().addHUDElement("walletHud");
     }
 
-    @ReceiveEvent
-    private void onUpdateWallet(UpdateWalletEvent event, EntityRef entity) {
-        CurrencyStorageComponent component = wallet.getComponent(CurrencyStorageComponent.class);
+    @ReceiveEvent(components = {CurrencyStorageComponent.class})
+    public void onUpdateWallet(UpdateWalletEvent event, EntityRef entity) {
+        CurrencyStorageComponent component = entity.getComponent(CurrencyStorageComponent.class);
         component.amount += event.getDelta();
         entity.saveComponent(component);
     }
