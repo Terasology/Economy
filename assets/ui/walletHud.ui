@@ -14,8 +14,21 @@
                     "width": 100
                 },
                 "content": {
-                    "type": "relativeLayout",
+                    "type": "flowLayout",
                     "contents": [
+                        {
+                            "type": "UIImage",
+                            "id": "currencyIcon",
+                            "image": "Economy:GoldCoin",
+                            "layoutInfo": {
+                                "position-left": {
+                                    "offset": 10
+                                },
+                                "position-vertical-center": {},
+                                "height": 30,
+                                "width": 30
+                            }
+                        },
                         {
                             "type": "UILabel",
                             "id": "walletInfoLabel",
@@ -26,7 +39,13 @@
                                 "height": 30
                             }
                         }
-                    ]
+                    ],
+                    "layoutInfo": {
+                        "position-horizontal-center": {},
+                        "position-vertical-center": {},
+                        "use-content-width": true,
+                        "height": 50
+                    }
                 }
             }
         ]

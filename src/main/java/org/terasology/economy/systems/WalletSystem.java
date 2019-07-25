@@ -58,8 +58,16 @@ public class WalletSystem extends BaseComponentSystem {
 
     @ReceiveEvent(components = {CurrencyStorageComponent.class})
     public void onUpdateWallet(UpdateWalletEvent event, EntityRef entity) {
+
+        // TODO: Probably use the resource draw/delete/create events to handle currency?
+
         CurrencyStorageComponent component = entity.getComponent(CurrencyStorageComponent.class);
         component.amount += event.getDelta();
         entity.saveComponent(component);
+    }
+
+    public boolean isValidTransaction(int delta) {
+        int balance = wallet.getComponent(CurrencyStorageComponent.class).amount;
+        return (balance + delta >= 0);
     }
 }

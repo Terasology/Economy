@@ -21,7 +21,7 @@ import org.terasology.economy.components.CurrencyStorageComponent;
 import org.terasology.economy.systems.WalletSystem;
 import org.terasology.logic.players.LocalPlayer;
 import org.terasology.registry.In;
-import org.terasology.rendering.nui.databinding.Binding;
+import org.terasology.rendering.nui.databinding.ReadOnlyBinding;
 import org.terasology.rendering.nui.layers.hud.CoreHudWidget;
 import org.terasology.rendering.nui.widgets.UILabel;
 
@@ -47,19 +47,10 @@ public class WalletHud extends CoreHudWidget {
         super.onOpened();
         CurrencyStorageComponent component = walletSystem.wallet.getComponent(CurrencyStorageComponent.class);
         if (label != null) {
-            label.bindText(new Binding<String>() {
+            label.bindText(new ReadOnlyBinding<String>() {
                 @Override
                 public String get() {
                     return String.valueOf(component.amount);
-                }
-
-                @Override
-                public void set(String value) {
-                    try {
-                        component.amount = Integer.parseInt(value);
-                    } catch (Exception e) {
-                        logger.warn("Cannot set wallet amount. Exception: {}", e.getMessage());
-                    }
                 }
             });
         }
