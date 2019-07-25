@@ -17,6 +17,9 @@ package org.terasology.economy.components;
 
 import org.terasology.entitySystem.Component;
 
+/**
+ * Marks an entity as a currency store
+ */
 public class CurrencyStorageComponent implements Component {
     public int amount;
 

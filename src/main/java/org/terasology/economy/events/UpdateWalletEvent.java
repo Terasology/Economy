@@ -17,6 +17,9 @@ package org.terasology.economy.events;
 
 import org.terasology.entitySystem.event.Event;
 
+/**
+ * Fired when the wallet needs to be updated.
+ */
 public class UpdateWalletEvent implements Event {
     private int delta = 0;
 

@@ -24,6 +24,9 @@ import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
+/**
+ * Handler for currency stores.
+ */
 public class CurrencyStorageHandler implements StorageComponentHandler<CurrencyStorageComponent> {
     private final String CURRENCY = "currency";
 

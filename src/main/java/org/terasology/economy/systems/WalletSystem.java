@@ -29,6 +29,9 @@ import org.terasology.registry.In;
 import org.terasology.registry.Share;
 import org.terasology.rendering.nui.NUIManager;
 
+/**
+ * Manages the player's wallet/money
+ */
 @Share(WalletSystem.class)
 @RegisterSystem(RegisterMode.AUTHORITY)
 public class WalletSystem extends BaseComponentSystem {
