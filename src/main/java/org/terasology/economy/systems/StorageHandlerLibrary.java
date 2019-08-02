@@ -18,6 +18,7 @@ package org.terasology.economy.systems;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.terasology.economy.handler.CurrencyStorageHandler;
 import org.terasology.economy.handler.InfiniteStorageHandler;
 import org.terasology.economy.handler.StorageComponentHandler;
 import org.terasology.entitySystem.Component;
@@ -47,6 +48,7 @@ public class StorageHandlerLibrary extends BaseComponentSystem {
     @Override
     public void postBegin() {
         registerHandler(new InfiniteStorageHandler());
+        registerHandler(new CurrencyStorageHandler());
     }
 
     public void registerHandler(StorageComponentHandler handler) {

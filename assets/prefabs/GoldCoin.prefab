@@ -1,7 +1,7 @@
 {
     "parent" : "engine:iconItem",
     "Item" : {
-        "icon" : "DynamicCities:GoldCoin"
+        "icon" : "Economy:GoldCoin"
     },
     "DisplayName" : {
         "name" : "Gold Coin",

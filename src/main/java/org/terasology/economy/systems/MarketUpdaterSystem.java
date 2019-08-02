@@ -44,7 +44,7 @@ import java.util.Collection;
 public class MarketUpdaterSystem extends BaseComponentSystem implements UpdateSubscriberSystem {
 
     private Logger logger = LoggerFactory.getLogger(MarketUpdaterSystem.class);
-    private int timer = 0;
+    private int timer = 300;
     private Multimap<Integer, EntityRef> productionIntervalLedger;
 
     @In
@@ -61,7 +61,7 @@ public class MarketUpdaterSystem extends BaseComponentSystem implements UpdateSu
     @Override
     public void update(float delta) {
         for (Integer interval : productionIntervalLedger.keySet()) {
-            if (timer % interval == 0) {
+            if (interval != 0 && timer % interval == 0) {
                 Collection<EntityRef> entities = productionIntervalLedger.get(interval);
                 entities.forEach(this::processSubscriber);
             }
