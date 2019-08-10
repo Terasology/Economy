@@ -15,8 +15,6 @@
  */
 package org.terasology.economy.ui;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.terasology.economy.components.CurrencyStorageComponent;
 import org.terasology.economy.systems.WalletSystem;
 import org.terasology.logic.players.LocalPlayer;
@@ -30,12 +28,7 @@ public class WalletHud extends CoreHudWidget {
     @In
     private LocalPlayer localPlayer;
 
-    @In
-    private WalletSystem walletSystem;
-
     private UILabel label;
-
-    private Logger logger = LoggerFactory.getLogger(WalletHud.class);
 
     @Override
     public void initialise() {
@@ -45,12 +38,16 @@ public class WalletHud extends CoreHudWidget {
     @Override
     public void onOpened() {
         super.onOpened();
-        CurrencyStorageComponent component = walletSystem.wallet.getComponent(CurrencyStorageComponent.class);
         if (label != null) {
             label.bindText(new ReadOnlyBinding<String>() {
                 @Override
                 public String get() {
-                    return String.valueOf(component.amount);
+                    CurrencyStorageComponent component = localPlayer.getCharacterEntity().getComponent(CurrencyStorageComponent.class);
+                    if (component != null) {
+                        return String.valueOf(component.amount);
+                    } else {
+                        return "0";
+                    }
                 }
             });
         }

@@ -25,6 +25,7 @@ import org.terasology.entitySystem.systems.BaseComponentSystem;
 import org.terasology.entitySystem.systems.RegisterMode;
 import org.terasology.entitySystem.systems.RegisterSystem;
 import org.terasology.logic.players.LocalPlayer;
+import org.terasology.logic.players.event.OnPlayerSpawnedEvent;
 import org.terasology.registry.In;
 import org.terasology.registry.Share;
 import org.terasology.rendering.nui.NUIManager;
@@ -33,7 +34,7 @@ import org.terasology.rendering.nui.NUIManager;
  * Manages the player's wallet/money
  */
 @Share(WalletSystem.class)
-@RegisterSystem(RegisterMode.AUTHORITY)
+@RegisterSystem(RegisterMode.ALWAYS)
 public class WalletSystem extends BaseComponentSystem {
 
     @In
@@ -48,29 +49,30 @@ public class WalletSystem extends BaseComponentSystem {
     @In
     private LocalPlayer localPlayer;
 
-    public EntityRef wallet;
+    private final int START_MONEY = 200;
 
-    @Override
-    public void postBegin() {
-        CurrencyStorageComponent component = new CurrencyStorageComponent(100);
-        wallet = entityManager.create();
-        wallet.addComponent(component);
+    @ReceiveEvent
+    public void onPlayerSpawn(OnPlayerSpawnedEvent event, EntityRef character) {
+        if (character == localPlayer.getCharacterEntity()) {
+            CurrencyStorageComponent component = new CurrencyStorageComponent(START_MONEY);
+            localPlayer.getCharacterEntity().addComponent(component);
 
-        nuiManager.getHUD().addHUDElement("walletHud");
+            nuiManager.getHUD().addHUDElement("walletHud");
+        }
     }
 
     @ReceiveEvent(components = {CurrencyStorageComponent.class})
-    public void onUpdateWallet(UpdateWalletEvent event, EntityRef entity) {
+    public void onUpdateWallet(UpdateWalletEvent event, EntityRef character) {
 
         // TODO: Probably use the resource draw/delete/create events to handle currency?
 
-        CurrencyStorageComponent component = entity.getComponent(CurrencyStorageComponent.class);
+        CurrencyStorageComponent component = character.getComponent(CurrencyStorageComponent.class);
         component.amount += event.getDelta();
-        entity.saveComponent(component);
+        character.saveComponent(component);
     }
 
     public boolean isValidTransaction(int delta) {
-        int balance = wallet.getComponent(CurrencyStorageComponent.class).amount;
+        int balance = localPlayer.getCharacterEntity().getComponent(CurrencyStorageComponent.class).amount;
         return (balance + delta >= 0);
     }
 }
