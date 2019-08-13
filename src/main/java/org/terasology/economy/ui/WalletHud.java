@@ -20,10 +20,10 @@ import org.terasology.registry.In;
 import org.terasology.rendering.nui.layers.hud.CoreHudWidget;
 import org.terasology.rendering.nui.widgets.UILabel;
 
+/**
+ * The UI class for the wallet HUD
+ */
 public class WalletHud extends CoreHudWidget {
-
-    @In
-    private LocalPlayer localPlayer;
 
     private UILabel label;
 

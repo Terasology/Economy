@@ -24,6 +24,9 @@ import org.terasology.logic.permission.PermissionManager;
 import org.terasology.logic.players.LocalPlayer;
 import org.terasology.registry.In;
 
+/**
+ * Adds some commands to change the amount in a player's wallet
+ */
 @RegisterSystem
 public class WalletCommands extends BaseComponentSystem {
 

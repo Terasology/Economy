@@ -74,6 +74,11 @@ public class WalletSystem extends BaseComponentSystem {
         walletHud.setLabelText(component.amount);
     }
 
+    /**
+     * Checks if the requested transaction is valid depending on the balance in the player's wallet
+     * @param delta: the change in the wallet after the transaction
+     * @return true if the wallet balance isn't negative after the transaction
+     */
     public boolean isValidTransaction(int delta) {
         int balance = walletEntity.getComponent(CurrencyStorageComponent.class).amount;
         return (balance + delta >= 0);
