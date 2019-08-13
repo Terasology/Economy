@@ -15,11 +15,8 @@
  */
 package org.terasology.economy.ui;
 
-import org.terasology.economy.components.CurrencyStorageComponent;
-import org.terasology.economy.systems.WalletSystem;
 import org.terasology.logic.players.LocalPlayer;
 import org.terasology.registry.In;
-import org.terasology.rendering.nui.databinding.ReadOnlyBinding;
 import org.terasology.rendering.nui.layers.hud.CoreHudWidget;
 import org.terasology.rendering.nui.widgets.UILabel;
 
@@ -33,23 +30,10 @@ public class WalletHud extends CoreHudWidget {
     @Override
     public void initialise() {
         label = find("walletInfoLabel", UILabel.class);
+        label.setText("0");
     }
 
-    @Override
-    public void onOpened() {
-        super.onOpened();
-        if (label != null) {
-            label.bindText(new ReadOnlyBinding<String>() {
-                @Override
-                public String get() {
-                    CurrencyStorageComponent component = localPlayer.getCharacterEntity().getComponent(CurrencyStorageComponent.class);
-                    if (component != null) {
-                        return String.valueOf(component.amount);
-                    } else {
-                        return "0";
-                    }
-                }
-            });
-        }
+    public void setLabelText(int amount) {
+        label.setText(String.valueOf(amount));
     }
 }

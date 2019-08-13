@@ -18,6 +18,7 @@ package org.terasology.economy.systems;
 import org.terasology.assets.management.AssetManager;
 import org.terasology.economy.components.CurrencyStorageComponent;
 import org.terasology.economy.events.UpdateWalletEvent;
+import org.terasology.economy.ui.WalletHud;
 import org.terasology.entitySystem.entity.EntityManager;
 import org.terasology.entitySystem.entity.EntityRef;
 import org.terasology.entitySystem.event.ReceiveEvent;
@@ -25,7 +26,7 @@ import org.terasology.entitySystem.systems.BaseComponentSystem;
 import org.terasology.entitySystem.systems.RegisterMode;
 import org.terasology.entitySystem.systems.RegisterSystem;
 import org.terasology.logic.players.LocalPlayer;
-import org.terasology.logic.players.event.OnPlayerSpawnedEvent;
+import org.terasology.network.NetworkSystem;
 import org.terasology.registry.In;
 import org.terasology.registry.Share;
 import org.terasology.rendering.nui.NUIManager;
@@ -34,7 +35,7 @@ import org.terasology.rendering.nui.NUIManager;
  * Manages the player's wallet/money
  */
 @Share(WalletSystem.class)
-@RegisterSystem(RegisterMode.ALWAYS)
+@RegisterSystem(RegisterMode.CLIENT)
 public class WalletSystem extends BaseComponentSystem {
 
     @In
@@ -49,30 +50,32 @@ public class WalletSystem extends BaseComponentSystem {
     @In
     private LocalPlayer localPlayer;
 
+    private WalletHud walletHud;
+    private EntityRef walletEntity;
+
     private final int START_MONEY = 200;
 
-    @ReceiveEvent
-    public void onPlayerSpawn(OnPlayerSpawnedEvent event, EntityRef character) {
-        if (character == localPlayer.getCharacterEntity()) {
-            CurrencyStorageComponent component = new CurrencyStorageComponent(START_MONEY);
-            localPlayer.getCharacterEntity().addComponent(component);
-
-            nuiManager.getHUD().addHUDElement("walletHud");
-        }
+    @Override
+    public void postBegin() {
+        CurrencyStorageComponent component = new CurrencyStorageComponent(START_MONEY);
+        walletEntity = entityManager.create(component);
+        walletHud = (WalletHud) nuiManager.getHUD().addHUDElement("walletHud");
+        walletHud.setLabelText(component.amount);
     }
 
-    @ReceiveEvent(components = {CurrencyStorageComponent.class})
+    @ReceiveEvent
     public void onUpdateWallet(UpdateWalletEvent event, EntityRef character) {
 
         // TODO: Probably use the resource draw/delete/create events to handle currency?
 
-        CurrencyStorageComponent component = character.getComponent(CurrencyStorageComponent.class);
+        CurrencyStorageComponent component = walletEntity.getComponent(CurrencyStorageComponent.class);
         component.amount += event.getDelta();
-        character.saveComponent(component);
+        walletEntity.saveComponent(component);
+        walletHud.setLabelText(component.amount);
     }
 
     public boolean isValidTransaction(int delta) {
-        int balance = localPlayer.getCharacterEntity().getComponent(CurrencyStorageComponent.class).amount;
+        int balance = walletEntity.getComponent(CurrencyStorageComponent.class).amount;
         return (balance + delta >= 0);
     }
 }
