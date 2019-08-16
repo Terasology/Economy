@@ -15,44 +15,25 @@
  */
 package org.terasology.economy.ui;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.terasology.economy.components.CurrencyStorageComponent;
-import org.terasology.economy.systems.WalletSystem;
 import org.terasology.logic.players.LocalPlayer;
 import org.terasology.registry.In;
-import org.terasology.rendering.nui.databinding.ReadOnlyBinding;
 import org.terasology.rendering.nui.layers.hud.CoreHudWidget;
 import org.terasology.rendering.nui.widgets.UILabel;
 
+/**
+ * The UI class for the wallet HUD
+ */
 public class WalletHud extends CoreHudWidget {
 
-    @In
-    private LocalPlayer localPlayer;
-
-    @In
-    private WalletSystem walletSystem;
-
     private UILabel label;
-
-    private Logger logger = LoggerFactory.getLogger(WalletHud.class);
 
     @Override
     public void initialise() {
         label = find("walletInfoLabel", UILabel.class);
+        label.setText("0");
     }
 
-    @Override
-    public void onOpened() {
-        super.onOpened();
-        CurrencyStorageComponent component = walletSystem.wallet.getComponent(CurrencyStorageComponent.class);
-        if (label != null) {
-            label.bindText(new ReadOnlyBinding<String>() {
-                @Override
-                public String get() {
-                    return String.valueOf(component.amount);
-                }
-            });
-        }
+    public void setLabelText(int amount) {
+        label.setText(String.valueOf(amount));
     }
 }
