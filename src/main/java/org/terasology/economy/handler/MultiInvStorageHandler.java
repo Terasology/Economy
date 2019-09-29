@@ -181,7 +181,7 @@ public class MultiInvStorageHandler extends BaseComponentSystem implements Stora
     public Component getTestComponent() {
         MultiInvStorageComponent multiInvStorageComponent = new MultiInvStorageComponent();
         multiInvStorageComponent.chests = new ArrayList<>();
-        ResourceUrn resourceUrn = assetManager.resolve("Core:chest", Prefab.class).iterator().next();
+        ResourceUrn resourceUrn = assetManager.resolve("CoreBlocks:chest", Prefab.class).iterator().next();
         Prefab chestPrefab = assetManager.getAsset(resourceUrn, Prefab.class).get();
         EntityRef chest = entityManager.create(chestPrefab);
         multiInvStorageComponent.chests.add(chest);
@@ -189,7 +189,7 @@ public class MultiInvStorageHandler extends BaseComponentSystem implements Stora
     }
     @Override
     public String getTestResource() {
-        return "core:torch";
+        return "CoreBlocks:torch";
     }
 
     private EntityRef getItemEntity(String resource) {
