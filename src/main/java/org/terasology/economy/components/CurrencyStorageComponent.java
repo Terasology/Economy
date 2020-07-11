@@ -16,11 +16,14 @@
 package org.terasology.economy.components;
 
 import org.terasology.entitySystem.Component;
+import org.terasology.network.Replicate;
 
 /**
  * Marks an entity as a currency store
  */
 public class CurrencyStorageComponent implements Component {
+
+    @Replicate
     public int amount;
 
     public CurrencyStorageComponent(int amount) {

@@ -18,12 +18,7 @@ package org.terasology.economy.systems;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.terasology.economy.components.InfiniteStorageComponent;
-import org.terasology.economy.events.ConditionedProductionEvent;
-import org.terasology.economy.events.ResourceCreationEvent;
-import org.terasology.economy.events.ResourceDestructionEvent;
-import org.terasology.economy.events.ResourceDrawEvent;
-import org.terasology.economy.events.ResourceInfoRequestEvent;
-import org.terasology.economy.events.ResourceStoreEvent;
+import org.terasology.economy.events.*;
 import org.terasology.economy.handler.StorageComponentHandler;
 import org.terasology.entitySystem.Component;
 import org.terasology.entitySystem.entity.EntityManager;
@@ -124,6 +119,17 @@ public class MarketLogisticSystem extends BaseComponentSystem {
             }
         }
         event.isHandled = true;
+    }
+
+    @ReceiveEvent
+    public void onMarketInfoClientRequest(MarketInfoClientRequestEvent event, EntityRef player) {
+        EntityRef market = entityManager.getEntity(event.marketId);
+        ResourceInfoRequestEvent requestEvent = new ResourceInfoRequestEvent();
+        market.send(requestEvent);
+
+        if (requestEvent.isHandled) {
+            player.send(new MarketInfoClientResponseEvent(requestEvent.resources));
+        }
     }
 
     @SuppressWarnings("unchecked")
