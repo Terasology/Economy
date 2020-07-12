@@ -19,4 +19,8 @@ public class PlayerResourceStoreComponent implements Component {
         this.resourceStore = resourceStore;
     }
 
+    public PlayerResourceStoreComponent() {
+
+    }
+
 }

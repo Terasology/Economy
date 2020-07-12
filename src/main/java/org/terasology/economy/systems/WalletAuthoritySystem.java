@@ -7,13 +7,17 @@ import org.slf4j.LoggerFactory;
 import org.terasology.economy.components.CurrencyStorageComponent;
 import org.terasology.economy.events.WalletTransactionEvent;
 import org.terasology.economy.events.WalletUpdatedEvent;
+import org.terasology.entitySystem.entity.EntityManager;
 import org.terasology.entitySystem.entity.EntityRef;
 import org.terasology.entitySystem.event.ReceiveEvent;
 import org.terasology.entitySystem.systems.BaseComponentSystem;
 import org.terasology.entitySystem.systems.RegisterMode;
 import org.terasology.entitySystem.systems.RegisterSystem;
+import org.terasology.logic.players.PlayerCharacterComponent;
 import org.terasology.logic.players.event.OnPlayerSpawnedEvent;
+import org.terasology.registry.In;
 import org.terasology.registry.Share;
+import org.terasology.world.time.WorldTimeEvent;
 
 /**
  * Deals with all server-side wallet operations, such as transactions and initial wallet creation.
@@ -23,6 +27,18 @@ import org.terasology.registry.Share;
 public class WalletAuthoritySystem extends BaseComponentSystem {
 
     private Logger logger = LoggerFactory.getLogger(WalletAuthoritySystem.class);
+
+    @In
+    public EntityManager entityManager;
+
+    @ReceiveEvent
+    public void onWorldTimeEvent(WorldTimeEvent worldTimeEvent, EntityRef entity) {
+        for (EntityRef player : entityManager.getEntitiesWith(PlayerCharacterComponent.class)) {
+            CurrencyStorageComponent component = player.getComponent(CurrencyStorageComponent.class);
+
+            player.send(new WalletUpdatedEvent(component.amount));
+        }
+    }
 
     @ReceiveEvent
     public void onPlayerJoin(OnPlayerSpawnedEvent onPlayerSpawnedEvent, EntityRef player) {
@@ -37,7 +53,7 @@ public class WalletAuthoritySystem extends BaseComponentSystem {
     public void walletUpdatedEvent(WalletTransactionEvent walletTransactionEvent, EntityRef player) {
         CurrencyStorageComponent component = player.getComponent(CurrencyStorageComponent.class);
 
-        if (component.amount - walletTransactionEvent.getDelta() >= 0) {
+        if (component.amount + walletTransactionEvent.getDelta() >= 0) {
             component.amount += walletTransactionEvent.getDelta();
             logger.info(String.format("Transaction of %d currency has succeeded.", walletTransactionEvent.getDelta()));
         } else {
