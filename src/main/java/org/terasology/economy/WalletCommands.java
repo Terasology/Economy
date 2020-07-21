@@ -15,7 +15,7 @@
  */
 package org.terasology.economy;
 
-import org.terasology.economy.events.UpdateWalletEvent;
+import org.terasology.economy.events.WalletTransactionEvent;
 import org.terasology.entitySystem.systems.BaseComponentSystem;
 import org.terasology.entitySystem.systems.RegisterSystem;
 import org.terasology.logic.console.commandSystem.annotations.Command;
@@ -35,7 +35,7 @@ public class WalletCommands extends BaseComponentSystem {
 
     @Command(shortDescription = "Add money to your wallet", requiredPermission = PermissionManager.CHEAT_PERMISSION)
     public String giveMoney(@CommandParam(value = "0") int amount) {
-        localPlayer.getCharacterEntity().send(new UpdateWalletEvent(amount));
+        localPlayer.getCharacterEntity().send(new WalletTransactionEvent(amount));
         return "Gave " + amount + " to player.";
     }
 }
