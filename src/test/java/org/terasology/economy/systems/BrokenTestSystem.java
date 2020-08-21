@@ -1,23 +1,11 @@
-/*
- * Copyright 2016 MovingBlocks
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+// Copyright 2020 The Terasology Foundation
+// SPDX-License-Identifier: Apache-2.0
 package org.terasology.economy.systems;
 
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.BeforeEach;
 import org.mockito.Mockito;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,7 +21,7 @@ import org.terasology.entitySystem.entity.internal.PojoEntityManager;
 import java.util.HashMap;
 import java.util.Map;
 
-
+@Disabled("Outdated")
 public class BrokenTestSystem {
 
     private Logger logger = LoggerFactory.getLogger(BrokenTestSystem.class);
@@ -48,7 +36,7 @@ public class BrokenTestSystem {
 
     MarketLogisticSystem marketLogisticSystem;
 
-    @Before
+    @BeforeEach
     public void setup() {
         marketLogisticSystem = new MarketLogisticSystem();
         entityManager = new PojoEntityManager();
@@ -74,8 +62,8 @@ public class BrokenTestSystem {
         Map<String, Integer> correctInvB = new HashMap<>();
         correctInvA.put("JellyBeans", 10);
         correctInvB.put("Waffles", 0);
-        Assert.assertEquals(correctInvA, containerA.inventory);
-        Assert.assertEquals(correctInvB, containerB.inventory);
+        Assertions.assertEquals(correctInvA, containerA.inventory);
+        Assertions.assertEquals(correctInvB, containerB.inventory);
     }
     @Test
     public void draw() {
@@ -91,8 +79,8 @@ public class BrokenTestSystem {
         correctInvA.put("JellyBeans", 0);
         correctInvB.put("JellyBeans", 10);
 
-        Assert.assertEquals(correctInvA, containerA.inventory);
-        Assert.assertEquals(correctInvB, containerB.inventory);
+        Assertions.assertEquals(correctInvA, containerA.inventory);
+        Assertions.assertEquals(correctInvB, containerB.inventory);
     }
     @Test
     public void store() {
@@ -108,10 +96,7 @@ public class BrokenTestSystem {
         correctInvA.put("JellyBeans", 0);
         correctInvB.put("JellyBeans", 10);
 
-        Assert.assertEquals(correctInvA, containerA.inventory);
-        Assert.assertEquals(correctInvB, containerB.inventory);
+        Assertions.assertEquals(correctInvA, containerA.inventory);
+        Assertions.assertEquals(correctInvB, containerB.inventory);
     }
-
-
-
 }
