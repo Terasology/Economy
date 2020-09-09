@@ -3,9 +3,9 @@
 package org.terasology.economy.systems;
 
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.BeforeEach;
 import org.mockito.Mockito;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,9 +14,9 @@ import org.terasology.economy.events.ResourceCreationEvent;
 import org.terasology.economy.events.ResourceDestructionEvent;
 import org.terasology.economy.events.ResourceDrawEvent;
 import org.terasology.economy.events.ResourceStoreEvent;
-import org.terasology.entitySystem.entity.EntityManager;
-import org.terasology.entitySystem.entity.EntityRef;
-import org.terasology.entitySystem.entity.internal.PojoEntityManager;
+import org.terasology.engine.entitySystem.entity.EntityManager;
+import org.terasology.engine.entitySystem.entity.EntityRef;
+import org.terasology.engine.entitySystem.entity.internal.PojoEntityManager;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -24,17 +24,13 @@ import java.util.Map;
 @Disabled("Outdated")
 public class BrokenTestSystem {
 
-    private Logger logger = LoggerFactory.getLogger(BrokenTestSystem.class);
-
-    private EntityManager entityManager;
-
-    private EntityRef storageA;
-    private EntityRef storageB;
-
+    private final Logger logger = LoggerFactory.getLogger(BrokenTestSystem.class);
     InfiniteStorageComponent storageAComponent;
     InfiniteStorageComponent storageBComponent;
-
     MarketLogisticSystem marketLogisticSystem;
+    private EntityManager entityManager;
+    private EntityRef storageA;
+    private EntityRef storageB;
 
     @BeforeEach
     public void setup() {
@@ -65,6 +61,7 @@ public class BrokenTestSystem {
         Assertions.assertEquals(correctInvA, containerA.inventory);
         Assertions.assertEquals(correctInvB, containerB.inventory);
     }
+
     @Test
     public void draw() {
         Map<String, Integer> correctInvA = new HashMap<>();
@@ -82,6 +79,7 @@ public class BrokenTestSystem {
         Assertions.assertEquals(correctInvA, containerA.inventory);
         Assertions.assertEquals(correctInvB, containerB.inventory);
     }
+
     @Test
     public void store() {
         Map<String, Integer> correctInvA = new HashMap<>();

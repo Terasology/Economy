@@ -7,17 +7,17 @@ import org.slf4j.LoggerFactory;
 import org.terasology.economy.components.CurrencyStorageComponent;
 import org.terasology.economy.events.WalletTransactionEvent;
 import org.terasology.economy.events.WalletUpdatedEvent;
-import org.terasology.entitySystem.entity.EntityManager;
-import org.terasology.entitySystem.entity.EntityRef;
-import org.terasology.entitySystem.event.ReceiveEvent;
-import org.terasology.entitySystem.systems.BaseComponentSystem;
-import org.terasology.entitySystem.systems.RegisterMode;
-import org.terasology.entitySystem.systems.RegisterSystem;
-import org.terasology.logic.players.PlayerCharacterComponent;
-import org.terasology.logic.players.event.OnPlayerSpawnedEvent;
-import org.terasology.registry.In;
-import org.terasology.registry.Share;
-import org.terasology.world.time.WorldTimeEvent;
+import org.terasology.engine.entitySystem.entity.EntityManager;
+import org.terasology.engine.entitySystem.entity.EntityRef;
+import org.terasology.engine.entitySystem.event.ReceiveEvent;
+import org.terasology.engine.entitySystem.systems.BaseComponentSystem;
+import org.terasology.engine.entitySystem.systems.RegisterMode;
+import org.terasology.engine.entitySystem.systems.RegisterSystem;
+import org.terasology.engine.logic.players.PlayerCharacterComponent;
+import org.terasology.engine.logic.players.event.OnPlayerSpawnedEvent;
+import org.terasology.engine.registry.In;
+import org.terasology.engine.registry.Share;
+import org.terasology.engine.world.time.WorldTimeEvent;
 
 /**
  * Deals with all server-side wallet operations, such as transactions and initial wallet creation.
@@ -26,7 +26,7 @@ import org.terasology.world.time.WorldTimeEvent;
 @RegisterSystem(RegisterMode.AUTHORITY)
 public class WalletAuthoritySystem extends BaseComponentSystem {
 
-    private Logger logger = LoggerFactory.getLogger(WalletAuthoritySystem.class);
+    private final Logger logger = LoggerFactory.getLogger(WalletAuthoritySystem.class);
 
     @In
     public EntityManager entityManager;
@@ -66,6 +66,7 @@ public class WalletAuthoritySystem extends BaseComponentSystem {
 
     /**
      * Checks if the requested transaction is valid depending on the balance in the player's wallet
+     *
      * @param delta: the change in the wallet after the transaction
      * @return true if the wallet balance isn't negative after the transaction
      */

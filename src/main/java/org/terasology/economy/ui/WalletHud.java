@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: Apache-2.0
 package org.terasology.economy.ui;
 
-import org.terasology.rendering.nui.layers.hud.CoreHudWidget;
+import org.terasology.engine.rendering.nui.layers.hud.CoreHudWidget;
 import org.terasology.nui.widgets.UILabel;
 
 /**

@@ -1,18 +1,5 @@
-/*
- * Copyright 2016 MovingBlocks
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+// Copyright 2020 The Terasology Foundation
+// SPDX-License-Identifier: Apache-2.0
 package org.terasology.economy.handler;
 
 
@@ -20,57 +7,52 @@ import com.google.common.base.Joiner;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.terasology.economy.components.MultiInvStorageComponent;
-import org.terasology.entitySystem.Component;
-import org.terasology.entitySystem.entity.EntityManager;
-import org.terasology.entitySystem.entity.EntityRef;
-import org.terasology.entitySystem.prefab.Prefab;
-import org.terasology.entitySystem.systems.BaseComponentSystem;
-import org.terasology.entitySystem.systems.RegisterMode;
-import org.terasology.entitySystem.systems.RegisterSystem;
+import org.terasology.engine.entitySystem.Component;
+import org.terasology.engine.entitySystem.entity.EntityManager;
+import org.terasology.engine.entitySystem.entity.EntityRef;
+import org.terasology.engine.entitySystem.prefab.Prefab;
+import org.terasology.engine.entitySystem.systems.BaseComponentSystem;
+import org.terasology.engine.entitySystem.systems.RegisterMode;
+import org.terasology.engine.entitySystem.systems.RegisterSystem;
+import org.terasology.engine.logic.inventory.ItemComponent;
+import org.terasology.engine.registry.In;
+import org.terasology.engine.registry.Share;
+import org.terasology.engine.utilities.Assets;
+import org.terasology.engine.world.block.BlockManager;
+import org.terasology.engine.world.block.entity.BlockCommands;
+import org.terasology.engine.world.block.family.BlockFamily;
+import org.terasology.engine.world.block.items.BlockItemComponent;
+import org.terasology.engine.world.block.items.BlockItemFactory;
 import org.terasology.gestalt.assets.ResourceUrn;
 import org.terasology.gestalt.assets.management.AssetManager;
-import org.terasology.logic.inventory.InventoryComponent;
-import org.terasology.logic.inventory.InventoryManager;
-import org.terasology.logic.inventory.InventoryUtils;
-import org.terasology.logic.inventory.ItemComponent;
-import org.terasology.registry.In;
-import org.terasology.registry.Share;
-import org.terasology.utilities.Assets;
-import org.terasology.world.block.BlockManager;
-import org.terasology.world.block.entity.BlockCommands;
-import org.terasology.world.block.family.BlockFamily;
-import org.terasology.world.block.items.BlockItemComponent;
-import org.terasology.world.block.items.BlockItemFactory;
+import org.terasology.inventory.logic.InventoryComponent;
+import org.terasology.inventory.logic.InventoryManager;
+import org.terasology.inventory.logic.InventoryUtils;
 
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 
 /**
- * This handles entities with multiple storage entities, mainly building-entities with chests
- * TODO: Delete consumption/production chest differentiation
+ * This handles entities with multiple storage entities, mainly building-entities with chests TODO: Delete
+ * consumption/production chest differentiation
  */
 @Share(MultiInvStorageHandler.class)
 @RegisterSystem(RegisterMode.AUTHORITY)
 public class MultiInvStorageHandler extends BaseComponentSystem implements StorageComponentHandler<MultiInvStorageComponent> {
 
+    private final Logger logger = LoggerFactory.getLogger(MultiInvStorageHandler.class);
     @In
     private AssetManager assetManager;
-
     @In
     private EntityManager entityManager;
-
     @In
     private BlockCommands blockCommands;
-
     @In
     private BlockManager blockManager;
-
     @In
     private InventoryManager inventoryManager;
-
     private BlockItemFactory blockItemFactory;
-    private Logger logger = LoggerFactory.getLogger(MultiInvStorageHandler.class);
     private ResourceUrn blockItemBase;
 
     @Override
@@ -90,8 +72,6 @@ public class MultiInvStorageHandler extends BaseComponentSystem implements Stora
         if (item == EntityRef.NULL) {
             return amount;
         }
-
-
 
 
         for (EntityRef entityRef : multiInvStorageComponent.chests) {
@@ -153,9 +133,7 @@ public class MultiInvStorageHandler extends BaseComponentSystem implements Stora
         int amount = 0;
         for (EntityRef entityRef : multiInvStorageComponent.chests) {
             for (String resource : getResourceTypesOfInventory(entityRef)) {
-                if (!result.contains(resource)) {
-                    result.add(resource);
-                }
+                result.add(resource);
             }
         }
         return result;
@@ -187,6 +165,7 @@ public class MultiInvStorageHandler extends BaseComponentSystem implements Stora
         multiInvStorageComponent.chests.add(chest);
         return multiInvStorageComponent;
     }
+
     @Override
     public String getTestResource() {
         return "CoreAssets:torch";
@@ -194,7 +173,7 @@ public class MultiInvStorageHandler extends BaseComponentSystem implements Stora
 
     private EntityRef getItemEntity(String resource) {
         Set<ResourceUrn> matches = assetManager.resolve(resource, Prefab.class);
-        switch(matches.size()) {
+        switch (matches.size()) {
             case 0:
                 logger.error("No item found matching resource string " + resource);
                 return EntityRef.NULL;
@@ -269,7 +248,7 @@ public class MultiInvStorageHandler extends BaseComponentSystem implements Stora
         if (!entity.exists() || !entity.isActive()) {
             return set;
         }
-        for(EntityRef item : inventoryComponent.itemSlots) {
+        for (EntityRef item : inventoryComponent.itemSlots) {
             ItemComponent itemComponent = item.getComponent(ItemComponent.class);
             if (itemComponent != null && !set.contains(itemComponent.stackId)) {
                 ResourceUrn uri = item.getParentPrefab().getUrn();

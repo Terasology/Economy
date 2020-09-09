@@ -1,18 +1,5 @@
-/*
- * Copyright 2016 MovingBlocks
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+// Copyright 2020 The Terasology Foundation
+// SPDX-License-Identifier: Apache-2.0
 package org.terasology.economy.systems;
 
 import org.slf4j.Logger;
@@ -23,14 +10,14 @@ import org.terasology.economy.events.ResourceDestructionEvent;
 import org.terasology.economy.events.ResourceDrawEvent;
 import org.terasology.economy.events.ResourceStoreEvent;
 import org.terasology.economy.handler.StorageComponentHandler;
-import org.terasology.entitySystem.Component;
-import org.terasology.entitySystem.entity.EntityManager;
-import org.terasology.entitySystem.entity.EntityRef;
-import org.terasology.entitySystem.systems.BaseComponentSystem;
-import org.terasology.entitySystem.systems.RegisterMode;
-import org.terasology.entitySystem.systems.RegisterSystem;
-import org.terasology.registry.In;
-import org.terasology.registry.Share;
+import org.terasology.engine.entitySystem.Component;
+import org.terasology.engine.entitySystem.entity.EntityManager;
+import org.terasology.engine.entitySystem.entity.EntityRef;
+import org.terasology.engine.entitySystem.systems.BaseComponentSystem;
+import org.terasology.engine.entitySystem.systems.RegisterMode;
+import org.terasology.engine.entitySystem.systems.RegisterSystem;
+import org.terasology.engine.registry.In;
+import org.terasology.engine.registry.Share;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -39,7 +26,7 @@ import java.util.Map;
 @RegisterSystem(RegisterMode.AUTHORITY)
 public class TestSystem extends BaseComponentSystem {
 
-    private Logger logger = LoggerFactory.getLogger(TestSystem.class);
+    private final Logger logger = LoggerFactory.getLogger(TestSystem.class);
 
     @In
     private EntityManager entityManager;
@@ -107,11 +94,13 @@ public class TestSystem extends BaseComponentSystem {
         Component containerB = storageB.getComponent(componentClass);
 
         if (!(componentHandler.availableResourceAmount(containerA, testResource) == 0)) {
-            logger.error("Resource draw unsuccessful for storage component " + componentClass.getName() + ". Container to draw from has not lost the right amount of resources!");
+            logger.error("Resource draw unsuccessful for storage component " + componentClass.getName() + ". " +
+                    "Container to draw from has not lost the right amount of resources!");
             return false;
         }
         if (!(componentHandler.availableResourceAmount(containerB, testResource) == 10)) {
-            logger.error("Resource draw unsuccessful for storage component " + componentClass.getName() + ". Container to draw into has not gained the right amount of resources!");
+            logger.error("Resource draw unsuccessful for storage component " + componentClass.getName() + ". " +
+                    "Container to draw into has not gained the right amount of resources!");
             return false;
         }
         storageA.send(new ResourceDestructionEvent(testResource, 999));
@@ -129,11 +118,13 @@ public class TestSystem extends BaseComponentSystem {
         Component containerB = storageB.getComponent(componentClass);
 
         if (!(componentHandler.availableResourceAmount(containerA, testResource) == 0)) {
-            logger.error("Resource store unsuccessful for storage component " + componentClass.getName() + ". Container to store from has not lost the right amount of resources!");
+            logger.error("Resource store unsuccessful for storage component " + componentClass.getName() + ". " +
+                    "Container to store from has not lost the right amount of resources!");
             return false;
         }
         if (!(componentHandler.availableResourceAmount(containerB, testResource) == 10)) {
-            logger.error("Resource draw unsuccessful for storage component " + componentClass.getName() + ". Container to store into has not gained the right amount of resources!");
+            logger.error("Resource draw unsuccessful for storage component " + componentClass.getName() + ". " +
+                    "Container to store into has not gained the right amount of resources!");
             return false;
         }
         storageA.send(new ResourceDestructionEvent(testResource, 999));
@@ -155,11 +146,13 @@ public class TestSystem extends BaseComponentSystem {
 
 
         if (!(componentHandler.availableResourceAmount(containerA, testResource) == 0)) {
-            logger.error("Resource consumption unsuccessful for storage component " + componentClass.getName() + ". Container to store from has not lost the right amount of resources!");
+            logger.error("Resource consumption unsuccessful for storage component " + componentClass.getName() + ". " +
+                    "Container to store from has not lost the right amount of resources!");
             return false;
         }
         if (!(componentHandler.availableResourceAmount(containerB, testResource) == 10)) {
-            logger.error("Resource production unsuccessful for storage component " + componentClass.getName() + ". Container to store into has not gained the right amount of resources!");
+            logger.error("Resource production unsuccessful for storage component " + componentClass.getName() + ". " +
+                    "Container to store into has not gained the right amount of resources!");
             return false;
         }
         storageA.send(new ResourceDestructionEvent(testResource, 999));
@@ -169,16 +162,15 @@ public class TestSystem extends BaseComponentSystem {
         storageA.send(new ResourceCreationEvent(testResource, 9));
         storageA.send(new ConditionedProductionEvent(consumptionPackage, productionPackage, storageA, storageB));
         if (!(componentHandler.availableResourceAmount(containerA, testResource) == 9)) {
-            logger.error("Resource consumption unsuccessful for storage component " + componentClass.getName() + ". Container to store from has not lost the right amount of resources!");
+            logger.error("Resource consumption unsuccessful for storage component " + componentClass.getName() + ". " +
+                    "Container to store from has not lost the right amount of resources!");
             return false;
         }
         if (!(componentHandler.availableResourceAmount(containerB, testResource) == 0)) {
-            logger.error("Resource production unsuccessful for storage component " + componentClass.getName() + ". Container to store into has not gained the right amount of resources!");
+            logger.error("Resource production unsuccessful for storage component " + componentClass.getName() + ". " +
+                    "Container to store into has not gained the right amount of resources!");
             return false;
         }
         return true;
     }
-
-
-
 }

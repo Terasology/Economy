@@ -1,53 +1,53 @@
 {
-    "type": "WalletHud",
-    "contents": {
-        "type": "relativeLayout",
-        "contents": [
+  "type": "WalletHud",
+  "contents": {
+    "type": "relativeLayout",
+    "contents": [
+      {
+        "type": "UIBox",
+        "layoutInfo": {
+          "height": 50,
+          "position-bottom": {},
+          "position-left": {
+            "offset": 200
+          },
+          "width": 100
+        },
+        "content": {
+          "type": "flowLayout",
+          "contents": [
             {
-                "type": "UIBox",
-                "layoutInfo": {
-                    "height": 50,
-                    "position-bottom": {},
-                    "position-left": {
-                        "offset": 200
-                    },
-                    "width": 100
+              "type": "UIImage",
+              "id": "currencyIcon",
+              "image": "Economy:GoldCoin",
+              "layoutInfo": {
+                "position-left": {
+                  "offset": 10
                 },
-                "content": {
-                    "type": "flowLayout",
-                    "contents": [
-                        {
-                            "type": "UIImage",
-                            "id": "currencyIcon",
-                            "image": "Economy:GoldCoin",
-                            "layoutInfo": {
-                                "position-left": {
-                                    "offset": 10
-                                },
-                                "position-vertical-center": {},
-                                "height": 30,
-                                "width": 30
-                            }
-                        },
-                        {
-                            "type": "UILabel",
-                            "id": "walletInfoLabel",
-                            "text": "",
-                            "layoutInfo": {
-                                "use-content-width": true,
-                                "position-horizontal-center": {},
-                                "height": 30
-                            }
-                        }
-                    ],
-                    "layoutInfo": {
-                        "position-horizontal-center": {},
-                        "position-vertical-center": {},
-                        "use-content-width": true,
-                        "height": 50
-                    }
-                }
+                "position-vertical-center": {},
+                "height": 30,
+                "width": 30
+              }
+            },
+            {
+              "type": "UILabel",
+              "id": "walletInfoLabel",
+              "text": "",
+              "layoutInfo": {
+                "use-content-width": true,
+                "position-horizontal-center": {},
+                "height": 30
+              }
             }
-        ]
-    }
+          ],
+          "layoutInfo": {
+            "position-horizontal-center": {},
+            "position-vertical-center": {},
+            "use-content-width": true,
+            "height": 50
+          }
+        }
+      }
+    ]
+  }
 }

@@ -1,18 +1,5 @@
-/*
- * Copyright 2016 MovingBlocks
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+// Copyright 2020 The Terasology Foundation
+// SPDX-License-Identifier: Apache-2.0
 package org.terasology.economy.systems;
 
 import com.google.common.collect.Multimap;
@@ -22,28 +9,28 @@ import org.slf4j.LoggerFactory;
 import org.terasology.economy.components.MarketSubscriberComponent;
 import org.terasology.economy.events.ConditionedProductionEvent;
 import org.terasology.economy.events.SubscriberRegistrationEvent;
-import org.terasology.entitySystem.entity.EntityManager;
-import org.terasology.entitySystem.entity.EntityRef;
-import org.terasology.entitySystem.event.ReceiveEvent;
-import org.terasology.entitySystem.systems.BaseComponentSystem;
-import org.terasology.entitySystem.systems.RegisterMode;
-import org.terasology.entitySystem.systems.RegisterSystem;
-import org.terasology.entitySystem.systems.UpdateSubscriberSystem;
+import org.terasology.engine.entitySystem.entity.EntityManager;
+import org.terasology.engine.entitySystem.entity.EntityRef;
+import org.terasology.engine.entitySystem.event.ReceiveEvent;
+import org.terasology.engine.entitySystem.systems.BaseComponentSystem;
+import org.terasology.engine.entitySystem.systems.RegisterMode;
+import org.terasology.engine.entitySystem.systems.RegisterSystem;
+import org.terasology.engine.entitySystem.systems.UpdateSubscriberSystem;
+import org.terasology.engine.registry.In;
+import org.terasology.engine.registry.Share;
 import org.terasology.gestalt.assets.management.AssetManager;
-import org.terasology.registry.In;
-import org.terasology.registry.Share;
 
 import java.util.Collection;
 
 /**
- * This system keeps track of entities with a MarketSubscriberComponent.
- * It sends the relevant resource requests at the respective interval for every subscriber.
+ * This system keeps track of entities with a MarketSubscriberComponent. It sends the relevant resource requests at the
+ * respective interval for every subscriber.
  */
 @Share(value = MarketUpdaterSystem.class)
 @RegisterSystem(RegisterMode.AUTHORITY)
 public class MarketUpdaterSystem extends BaseComponentSystem implements UpdateSubscriberSystem {
 
-    private Logger logger = LoggerFactory.getLogger(MarketUpdaterSystem.class);
+    private final Logger logger = LoggerFactory.getLogger(MarketUpdaterSystem.class);
     private int timer = 300;
     private Multimap<Integer, EntityRef> productionIntervalLedger;
 
@@ -83,7 +70,8 @@ public class MarketUpdaterSystem extends BaseComponentSystem implements UpdateSu
         if (marketSubscriberComponent == null) {
             logger.error("Entity has no valid MarketSubscriberComponent. Entity: " + entity.toFullDescription());
         }
-        entity.send(new ConditionedProductionEvent(marketSubscriberComponent.consumption, marketSubscriberComponent.production,
+        entity.send(new ConditionedProductionEvent(marketSubscriberComponent.consumption,
+                marketSubscriberComponent.production,
                 marketSubscriberComponent.consumptionStorage, marketSubscriberComponent.productStorage));
     }
 
