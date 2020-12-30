@@ -1,15 +1,24 @@
 {
-    "id": "Economy",
-    "version": "1.0.0",
-    "author": "Cpt Crunchy",
-    "displayName": "Economy",
-    "description": "Utility module to give entities the ability to trade / produce and consume resources. A simple trading interface and currency will be introduced. Additionally the market should react to the availability of resources by adjusting the prices accordingly.",
-    "dependencies": [
-        { "id": "CoreAdvancedAssets", "minVersion": "1.1.0" },
-        { "id": "CoreAssets", "minVersion": "2.0.1" },
-        { "id": "Inventory", "minVersion": "1.1.0" }
-    ],
-    "serverSideOnly": false,
-    "isLibrary": true,
-    "isAugmentation": true
+  "id": "Economy",
+  "version": "1.1.0-SNAPSHOT",
+  "author": "Cpt Crunchy",
+  "displayName": "Economy",
+  "description": "Utility module to give entities the ability to trade / produce and consume resources. A simple trading interface and currency will be introduced. Additionally the market should react to the availability of resources by adjusting the prices accordingly.",
+  "dependencies": [
+    {
+      "id": "CoreAdvancedAssets",
+      "minVersion": "1.1.0"
+    },
+    {
+      "id": "CoreAssets",
+      "minVersion": "2.0.1"
+    },
+    {
+      "id": "Inventory",
+      "minVersion": "1.1.0"
+    }
+  ],
+  "serverSideOnly": false,
+  "isLibrary": true,
+  "isAugmentation": true
 }
