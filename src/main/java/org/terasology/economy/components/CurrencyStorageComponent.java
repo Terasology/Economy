@@ -15,8 +15,8 @@
  */
 package org.terasology.economy.components;
 
-import org.terasology.entitySystem.Component;
-import org.terasology.network.Replicate;
+import org.terasology.engine.entitySystem.Component;
+import org.terasology.engine.network.Replicate;
 
 /**
  * Marks an entity as a currency store

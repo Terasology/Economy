@@ -16,7 +16,7 @@
 package org.terasology.economy.events;
 
 
-import org.terasology.entitySystem.event.Event;
+import org.terasology.engine.entitySystem.event.Event;
 
 public class ResourceDestructionEvent implements Event {
     private String resource;

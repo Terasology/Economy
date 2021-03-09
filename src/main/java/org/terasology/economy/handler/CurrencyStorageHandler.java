@@ -18,7 +18,7 @@ package org.terasology.economy.handler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.terasology.economy.components.CurrencyStorageComponent;
-import org.terasology.entitySystem.Component;
+import org.terasology.engine.entitySystem.Component;
 
 import java.util.HashSet;
 import java.util.Objects;

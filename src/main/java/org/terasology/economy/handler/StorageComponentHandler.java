@@ -16,7 +16,7 @@
 package org.terasology.economy.handler;
 
 
-import org.terasology.entitySystem.Component;
+import org.terasology.engine.entitySystem.Component;
 
 import java.util.Set;
 
