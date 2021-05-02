@@ -19,7 +19,7 @@ import com.google.common.collect.Multimap;
 import com.google.common.collect.MultimapBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.terasology.assets.management.AssetManager;
+import org.terasology.gestalt.assets.management.AssetManager;
 import org.terasology.economy.components.MarketSubscriberComponent;
 import org.terasology.economy.events.ConditionedProductionEvent;
 import org.terasology.economy.events.SubscriberRegistrationEvent;
