@@ -19,4 +19,9 @@ public class CurrencyStorageComponent implements Component<CurrencyStorageCompon
 
     public CurrencyStorageComponent() {
     }
+
+    @Override
+    public void copy(CurrencyStorageComponent other) {
+        this.amount = other.amount;
+    }
 }

@@ -23,4 +23,8 @@ public class PlayerResourceStoreComponent implements Component<PlayerResourceSto
 
     }
 
+    @Override
+    public void copy(PlayerResourceStoreComponent other) {
+        this.resourceStore = other.resourceStore;
+    }
 }

@@ -1,12 +1,11 @@
 // Copyright 2021 The Terasology Foundation
 // SPDX-License-Identifier: Apache-2.0
-
 package org.terasology.economy.components;
 
 
+import com.google.common.collect.Maps;
 import org.terasology.gestalt.entitysystem.component.Component;
 
-import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -15,12 +14,15 @@ import java.util.Map;
  */
 public class InfiniteStorageComponent implements Component<InfiniteStorageComponent> {
 
-    public Map<String, Integer> inventory;
+    public Map<String, Integer> inventory = Maps.newHashMap();
 
     public InfiniteStorageComponent(int i) {
-        inventory = new HashMap<>();
     }
 
     public InfiniteStorageComponent() {}
 
+    @Override
+    public void copy(InfiniteStorageComponent other) {
+        this.inventory = Maps.newHashMap(other.inventory);
+    }
 }
