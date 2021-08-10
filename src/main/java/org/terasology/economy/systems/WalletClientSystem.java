@@ -1,4 +1,4 @@
-// Copyright 2020 The Terasology Foundation
+// Copyright 2021 The Terasology Foundation
 // SPDX-License-Identifier: Apache-2.0
 package org.terasology.economy.systems;
 
@@ -11,6 +11,8 @@ import org.terasology.engine.entitySystem.systems.RegisterMode;
 import org.terasology.engine.entitySystem.systems.RegisterSystem;
 import org.terasology.engine.registry.In;
 import org.terasology.engine.rendering.nui.NUIManager;
+import org.terasology.nui.databinding.Binding;
+import org.terasology.nui.databinding.DefaultBinding;
 
 /**
  * Manages the player's wallet UI.
@@ -21,14 +23,15 @@ public class WalletClientSystem extends BaseComponentSystem {
     @In
     private NUIManager nuiManager;
 
-    private WalletHud walletHud;
+    private Binding<String> walletBalance = new DefaultBinding<>("");
 
-    public void postBegin() {
-        walletHud = (WalletHud) nuiManager.getHUD().addHUDElement("walletHud");
+    public void preBegin() {
+        WalletHud walletHud = (WalletHud) nuiManager.getHUD().addHUDElement("walletHud");
+        walletHud.bind(walletBalance);
     }
 
     @ReceiveEvent
     public void onUpdateWallet(WalletUpdatedEvent event, EntityRef character) {
-        walletHud.setLabelText(event.amount);
+        walletBalance.set(String.valueOf(event.amount));
     }
 }
