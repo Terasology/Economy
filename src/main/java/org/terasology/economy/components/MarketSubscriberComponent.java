@@ -33,7 +33,7 @@ public class MarketSubscriberComponent implements Component<MarketSubscriberComp
     }
 
     @Override
-    public void copy(MarketSubscriberComponent other) {
+    public void copyFrom(MarketSubscriberComponent other) {
         this.production = Maps.newHashMap(other.production);
         this.consumption = Maps.newHashMap(other.consumption);
         this.internalBuffer = Maps.newHashMap(other.internalBuffer);

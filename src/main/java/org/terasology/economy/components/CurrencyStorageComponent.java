@@ -21,7 +21,7 @@ public class CurrencyStorageComponent implements Component<CurrencyStorageCompon
     }
 
     @Override
-    public void copy(CurrencyStorageComponent other) {
+    public void copyFrom(CurrencyStorageComponent other) {
         this.amount = other.amount;
     }
 }

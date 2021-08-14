@@ -15,7 +15,7 @@ public class MultiInvStorageComponent implements Component<MultiInvStorageCompon
     public List<EntityRef> chests = Lists.newArrayList();
 
     @Override
-    public void copy(MultiInvStorageComponent other) {
+    public void copyFrom(MultiInvStorageComponent other) {
 
     }
 }

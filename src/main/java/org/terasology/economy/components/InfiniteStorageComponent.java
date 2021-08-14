@@ -22,7 +22,7 @@ public class InfiniteStorageComponent implements Component<InfiniteStorageCompon
     public InfiniteStorageComponent() {}
 
     @Override
-    public void copy(InfiniteStorageComponent other) {
+    public void copyFrom(InfiniteStorageComponent other) {
         this.inventory = Maps.newHashMap(other.inventory);
     }
 }
