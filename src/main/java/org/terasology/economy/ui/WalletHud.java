@@ -1,8 +1,9 @@
-// Copyright 2020 The Terasology Foundation
+// Copyright 2021 The Terasology Foundation
 // SPDX-License-Identifier: Apache-2.0
 package org.terasology.economy.ui;
 
 import org.terasology.engine.rendering.nui.layers.hud.CoreHudWidget;
+import org.terasology.nui.databinding.Binding;
 import org.terasology.nui.widgets.UILabel;
 
 /**
@@ -18,7 +19,7 @@ public class WalletHud extends CoreHudWidget {
         label.setText("0");
     }
 
-    public void setLabelText(int amount) {
-        label.setText(String.valueOf(amount));
+    public void bind(Binding<String> walletBalance) {
+        label.bindText(walletBalance);
     }
 }
