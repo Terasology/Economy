@@ -8,13 +8,13 @@ import org.slf4j.LoggerFactory;
 import org.terasology.economy.handler.CurrencyStorageHandler;
 import org.terasology.economy.handler.InfiniteStorageHandler;
 import org.terasology.economy.handler.StorageComponentHandler;
-import org.terasology.engine.entitySystem.Component;
 import org.terasology.engine.entitySystem.entity.EntityRef;
 import org.terasology.engine.entitySystem.systems.BaseComponentSystem;
 import org.terasology.engine.entitySystem.systems.RegisterMode;
 import org.terasology.engine.entitySystem.systems.RegisterSystem;
 import org.terasology.engine.registry.In;
 import org.terasology.engine.registry.Share;
+import org.terasology.gestalt.entitysystem.component.Component;
 
 import java.util.HashMap;
 import java.util.Map;

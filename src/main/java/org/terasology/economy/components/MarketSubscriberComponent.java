@@ -4,19 +4,20 @@
 package org.terasology.economy.components;
 
 
-import org.terasology.engine.entitySystem.Component;
+import com.google.common.collect.Maps;
 import org.terasology.engine.entitySystem.entity.EntityRef;
+import org.terasology.gestalt.entitysystem.component.Component;
 import org.terasology.reflection.MappedContainer;
 
 import java.util.HashMap;
 import java.util.Map;
 
 @MappedContainer
-public class MarketSubscriberComponent implements Component {
+public class MarketSubscriberComponent implements Component<MarketSubscriberComponent> {
 
-    public Map<String, Integer> production;
-    public Map<String, Integer> consumption;
-    public Map<String, Integer> internalBuffer;
+    public Map<String, Integer> production = Maps.newHashMap();
+    public Map<String, Integer> consumption = Maps.newHashMap();
+    public Map<String, Integer> internalBuffer = Maps.newHashMap();
     public EntityRef productStorage;
     public EntityRef consumptionStorage;
     public int productionInterval;
@@ -31,4 +32,14 @@ public class MarketSubscriberComponent implements Component {
 
     }
 
+    @Override
+    public void copyFrom(MarketSubscriberComponent other) {
+        this.production = Maps.newHashMap(other.production);
+        this.consumption = Maps.newHashMap(other.consumption);
+        this.internalBuffer = Maps.newHashMap(other.internalBuffer);
+
+        this.productStorage = other.productStorage;
+        this.consumptionStorage = other.consumptionStorage;
+        this.productionInterval = other.productionInterval;
+    }
 }

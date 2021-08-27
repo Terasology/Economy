@@ -2,13 +2,13 @@
 // SPDX-License-Identifier: Apache-2.0
 package org.terasology.economy.components;
 
-import org.terasology.engine.entitySystem.Component;
 import org.terasology.engine.network.Replicate;
+import org.terasology.gestalt.entitysystem.component.Component;
 
 /**
  * Marks an entity as a currency store
  */
-public class CurrencyStorageComponent implements Component {
+public class CurrencyStorageComponent implements Component<CurrencyStorageComponent> {
 
     @Replicate
     public int amount;
@@ -18,5 +18,10 @@ public class CurrencyStorageComponent implements Component {
     }
 
     public CurrencyStorageComponent() {
+    }
+
+    @Override
+    public void copyFrom(CurrencyStorageComponent other) {
+        this.amount = other.amount;
     }
 }

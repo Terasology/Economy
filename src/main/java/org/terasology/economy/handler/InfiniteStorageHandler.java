@@ -4,7 +4,7 @@ package org.terasology.economy.handler;
 
 
 import org.terasology.economy.components.InfiniteStorageComponent;
-import org.terasology.engine.entitySystem.Component;
+import org.terasology.gestalt.entitysystem.component.Component;
 
 import java.util.Map;
 import java.util.Set;

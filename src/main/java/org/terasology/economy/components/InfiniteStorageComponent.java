@@ -4,23 +4,26 @@
 package org.terasology.economy.components;
 
 
-import org.terasology.engine.entitySystem.Component;
+import com.google.common.collect.Maps;
+import org.terasology.gestalt.entitysystem.component.Component;
 
-import java.util.HashMap;
 import java.util.Map;
 
 /**
  * This storage component has an infinite stack-size and capacity.
  * Used for testing and simulation purposes.
  */
-public class InfiniteStorageComponent implements Component {
+public class InfiniteStorageComponent implements Component<InfiniteStorageComponent> {
 
-    public Map<String, Integer> inventory;
+    public Map<String, Integer> inventory = Maps.newHashMap();
 
     public InfiniteStorageComponent(int i) {
-        inventory = new HashMap<>();
     }
 
     public InfiniteStorageComponent() {}
 
+    @Override
+    public void copyFrom(InfiniteStorageComponent other) {
+        this.inventory = Maps.newHashMap(other.inventory);
+    }
 }

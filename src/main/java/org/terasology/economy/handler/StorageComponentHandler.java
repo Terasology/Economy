@@ -3,7 +3,7 @@
 package org.terasology.economy.handler;
 
 
-import org.terasology.engine.entitySystem.Component;
+import org.terasology.gestalt.entitysystem.component.Component;
 
 import java.util.Set;
 
