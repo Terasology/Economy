@@ -1,18 +1,5 @@
-/*
- * Copyright 2016 MovingBlocks
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+// Copyright 2021 The Terasology Foundation
+// SPDX-License-Identifier: Apache-2.0
 package org.terasology.economy.systems;
 
 import org.slf4j.Logger;
@@ -53,7 +40,7 @@ import java.util.Set;
 @RegisterSystem(RegisterMode.AUTHORITY)
 public class MarketLogisticSystem extends BaseComponentSystem {
 
-    private Logger logger = LoggerFactory.getLogger(MarketLogisticSystem.class);
+    private static final Logger logger = LoggerFactory.getLogger(MarketLogisticSystem.class);
 
     @In
     private StorageHandlerLibrary storageHandlerLibrary;
@@ -83,8 +70,10 @@ public class MarketLogisticSystem extends BaseComponentSystem {
 
     @ReceiveEvent
     public void conditionedProduction(ConditionedProductionEvent event, EntityRef entityRef) {
-        if ((event.getConsumptionResourcePackages() == null || checkResourcesFullyAvailable(event.getConsumptionResourcePackages(), event.getConsumptionStorage()))
-                && (event.getConsumptionResourcePackages() == null || checkCapacityFullyAvailable(event.getProductionResourcePackages(), event.getProductionStorage()))) {
+        if ((event.getConsumptionResourcePackages() == null
+                || checkResourcesFullyAvailable(event.getConsumptionResourcePackages(), event.getConsumptionStorage()))
+                && (event.getConsumptionResourcePackages() == null
+                || checkCapacityFullyAvailable(event.getProductionResourcePackages(), event.getProductionStorage()))) {
             if (event.getConsumptionResourcePackages() != null) {
                 for (Map.Entry<String, Integer> resource : event.getConsumptionResourcePackages().entrySet()) {
                     event.getConsumptionStorage().send(new ResourceDestructionEvent(resource.getKey(), resource.getValue()));
@@ -144,11 +133,11 @@ public class MarketLogisticSystem extends BaseComponentSystem {
         Map<Component, StorageComponentHandler> targetStorageComponents = storageHandlerLibrary.getHandlerComponentMapForEntity(event.getTarget());
         Map<Component, StorageComponentHandler> originStorageComponents = storageHandlerLibrary.getHandlerComponentMapForEntity(entityRef);
 
-        if(targetStorageComponents.isEmpty()) {
+        if (targetStorageComponents.isEmpty()) {
             logger.warn("Attempted to draw out resources from a target with no valid storage. Entity: " + event.getTarget().toString());
             return -1;
         }
-        if(originStorageComponents.isEmpty()) {
+        if (originStorageComponents.isEmpty()) {
             logger.warn("Attempted to store resources in an origin with no valid storage. Entity: " + entityRef.toString());
             return -1;
         }
@@ -180,11 +169,11 @@ public class MarketLogisticSystem extends BaseComponentSystem {
         Map<Component, StorageComponentHandler> targetStorageComponents = storageHandlerLibrary.getHandlerComponentMapForEntity(event.getTarget());
         Map<Component, StorageComponentHandler> originStorageComponents = storageHandlerLibrary.getHandlerComponentMapForEntity(entityRef);
 
-        if(targetStorageComponents.isEmpty()) {
+        if (targetStorageComponents.isEmpty()) {
             logger.warn("Attempted to store resources in a target with no valid storage. Entity: " + event.getTarget().toString());
             return -1;
         }
-        if(originStorageComponents.isEmpty()) {
+        if (originStorageComponents.isEmpty()) {
             logger.warn("Attempted to draw out resources from an origin with no valid storage. Entity: " + entityRef.toString());
             return -1;
         }

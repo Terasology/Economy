@@ -23,6 +23,8 @@ import org.terasology.module.inventory.systems.InventoryAuthoritySystem;
 @RegisterSystem(RegisterMode.AUTHORITY)
 public class ItemAuthoritySystem extends BaseComponentSystem {
 
+    private static final Logger logger = LoggerFactory.getLogger(InventoryAuthoritySystem.class);
+
     @In
     private WalletAuthoritySystem walletAuthoritySystem;
     @In
@@ -31,8 +33,6 @@ public class ItemAuthoritySystem extends BaseComponentSystem {
     private BlockManager blockManager;
 
     private BlockItemFactory blockItemFactory;
-
-    private Logger logger = LoggerFactory.getLogger(InventoryAuthoritySystem.class);
 
     @Override
     public void postBegin() {

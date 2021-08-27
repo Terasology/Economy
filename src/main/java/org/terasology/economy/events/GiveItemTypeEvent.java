@@ -7,8 +7,8 @@ import org.terasology.engine.entitySystem.prefab.Prefab;
 import org.terasology.engine.network.ServerEvent;
 
 /**
- * Trigger event that sends the required item (as a string/prefab) to the server.
- * It then creates the item entity and gives the item on the server.
+ * Trigger event that sends the description of the required item (as a string/prefab) to the server.
+ * It then creates the item entity using the description and gives the item on the server.
  */
 @ServerEvent
 public class GiveItemTypeEvent implements Event {

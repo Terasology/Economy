@@ -25,7 +25,7 @@ import java.util.List;
  * Displays a separate widget whilst capturing user interaction with it.
  * When the icon corresponding to the item is clicked, a tooltip containing the item's name and additional information is displayed.
  * <p>
- * All size values etc etc are determined by the content widget.
+ * All size values etc are determined by the content widget.
  */
 public class UIInteractionWrapper extends CoreWidget {
     private UIWidget content;

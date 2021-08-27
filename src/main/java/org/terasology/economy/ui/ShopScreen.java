@@ -3,7 +3,6 @@
 package org.terasology.economy.ui;
 
 import org.terasology.economy.ShopManager;
-import org.terasology.engine.entitySystem.entity.EntityManager;
 import org.terasology.engine.entitySystem.entity.EntityRef;
 import org.terasology.engine.entitySystem.prefab.Prefab;
 import org.terasology.engine.logic.common.DisplayNameComponent;
@@ -11,10 +10,8 @@ import org.terasology.engine.logic.inventory.ItemComponent;
 import org.terasology.engine.logic.players.LocalPlayer;
 import org.terasology.engine.registry.In;
 import org.terasology.engine.rendering.assets.texture.Texture;
-import org.terasology.engine.rendering.assets.texture.TextureRegionAsset;
 import org.terasology.engine.rendering.nui.CoreScreenLayer;
 import org.terasology.engine.world.block.Block;
-import org.terasology.gestalt.assets.management.AssetManager;
 import org.terasology.module.inventory.ui.InventoryGrid;
 import org.terasology.module.inventory.ui.InventoryScreen;
 import org.terasology.module.inventory.ui.ItemIcon;
@@ -27,7 +24,6 @@ import org.terasology.nui.widgets.TooltipLine;
 import org.terasology.nui.widgets.UILabel;
 
 import java.util.Collections;
-import java.util.Optional;
 import java.util.Set;
 
 /**
@@ -53,8 +49,6 @@ public class ShopScreen extends CoreScreenLayer {
     private LocalPlayer localPlayer;
     @In
     private ShopManager shopManager;
-    @In
-    private AssetManager assetManager;
 
     @Override
     public void onOpened() {

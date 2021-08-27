@@ -1,18 +1,5 @@
-/*
- * Copyright 2019 MovingBlocks
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+// Copyright 2021 The Terasology Foundation
+// SPDX-License-Identifier: Apache-2.0
 package org.terasology.economy.handler;
 
 import org.slf4j.Logger;
@@ -28,13 +15,13 @@ import java.util.Set;
  * Handler for currency stores.
  */
 public class CurrencyStorageHandler implements StorageComponentHandler<CurrencyStorageComponent> {
-    private final String CURRENCY = "currency";
 
-    private Logger logger = LoggerFactory.getLogger(CurrencyStorageHandler.class);
+    private static final Logger logger = LoggerFactory.getLogger(CurrencyStorageHandler.class);
+    private final String currency = "currency";
 
     @Override
     public int store(CurrencyStorageComponent storage, String resource, int amount) {
-        if (Objects.equals(resource, CURRENCY)) {
+        if (Objects.equals(resource, currency)) {
             storage.amount += amount;
         }
         return 0;
@@ -43,7 +30,7 @@ public class CurrencyStorageHandler implements StorageComponentHandler<CurrencyS
     @Override
     public int draw(CurrencyStorageComponent storage, String resource, int amount) {
         int leftOver = 0;
-        if (Objects.equals(resource, CURRENCY)) {
+        if (Objects.equals(resource, currency)) {
             if (storage.amount >= amount) {
                 storage.amount -= amount;
             } else {
@@ -56,7 +43,7 @@ public class CurrencyStorageHandler implements StorageComponentHandler<CurrencyS
 
     @Override
     public int availableResourceAmount(CurrencyStorageComponent storage, String resource) {
-        if (Objects.equals(resource, CURRENCY)) {
+        if (Objects.equals(resource, currency)) {
             return storage.amount;
         } else {
             return 0;
@@ -71,7 +58,7 @@ public class CurrencyStorageHandler implements StorageComponentHandler<CurrencyS
     @Override
     public Set<String> availableResourceTypes(CurrencyStorageComponent storage) {
         Set<String> types = new HashSet<>();
-        types.add(CURRENCY);
+        types.add(currency);
         return types;
     }
 
@@ -87,6 +74,6 @@ public class CurrencyStorageHandler implements StorageComponentHandler<CurrencyS
 
     @Override
     public String getTestResource() {
-        return CURRENCY;
+        return currency;
     }
 }
