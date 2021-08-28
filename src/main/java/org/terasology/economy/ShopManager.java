@@ -7,7 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.terasology.economy.components.PurchasableComponent;
 import org.terasology.economy.components.ValueComponent;
-import org.terasology.economy.events.GiveItemTypeEvent;
+import org.terasology.economy.events.PurchaseItemEvent;
 import org.terasology.economy.events.WalletTransactionEvent;
 import org.terasology.economy.systems.WalletAuthoritySystem;
 import org.terasology.engine.entitySystem.entity.EntityManager;
@@ -119,12 +119,12 @@ public class ShopManager extends BaseComponentSystem {
     public void purchaseBlock(Block block) {
         EntityRef character = localPlayer.getCharacterEntity();
         String blockURI = block.toString();
-        character.send(new GiveItemTypeEvent(blockURI));
+        character.send(new PurchaseItemEvent(blockURI));
     }
 
     public void purchaseItem(Prefab prefab) {
         EntityRef character = localPlayer.getCharacterEntity();
-        character.send(new GiveItemTypeEvent(prefab));
+        character.send(new PurchaseItemEvent(prefab));
     }
 
     void performTransaction(EntityRef entity, EntityRef item) {
@@ -136,7 +136,7 @@ public class ShopManager extends BaseComponentSystem {
     }
 
     @ReceiveEvent(netFilter = RegisterMode.AUTHORITY)
-    public void onPurchaseItem(GiveItemTypeEvent event, EntityRef entity) {
+    public void onPurchaseItem(PurchaseItemEvent event, EntityRef entity) {
         if (event.getTargetPrefab() != null && event.getTargetPrefab().hasComponent(ValueComponent.class)) {
             EntityRef item = entityManager.create(event.getTargetPrefab());
             performTransaction(entity, item);
