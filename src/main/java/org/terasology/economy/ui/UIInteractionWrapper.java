@@ -26,6 +26,18 @@ import java.util.List;
  * When the icon corresponding to the item is clicked, a tooltip containing the item's name and additional information is displayed.
  * <p>
  * All size values etc are determined by the content widget.
+ * <p>
+ * NOTE: We can't just use the {@code ItemIcon} widget that this contains, because we cannot assign a listener to it.
+ * We need to assign a listener to it, because clicking on this widget indicated that this item is selected.
+ * This is visible from the line in ShopScreen#addBlocks
+ * <pre>
+ * wrapper.setListener(widget -> handleBlockSelected(block));
+ * </pre>
+ * and the line in ShopScreen#addItems
+ * <pre>
+ * wrapper.setListener(widget -> handlePrefabSelected(item));
+ * </pre>
+ * The listener indicates which shop entry was selected, as well as calling the handler for the specific type, item vs block.
  */
 public class UIInteractionWrapper extends CoreWidget {
     private UIWidget content;

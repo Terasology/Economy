@@ -2,8 +2,6 @@
 // SPDX-License-Identifier: Apache-2.0
 package org.terasology.economy.handler;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.terasology.economy.components.CurrencyStorageComponent;
 import org.terasology.gestalt.entitysystem.component.Component;
 
@@ -16,12 +14,11 @@ import java.util.Set;
  */
 public class CurrencyStorageHandler implements StorageComponentHandler<CurrencyStorageComponent> {
 
-    private static final Logger logger = LoggerFactory.getLogger(CurrencyStorageHandler.class);
-    private final String currency = "currency";
+    private static final String CURRENCY = "currency";
 
     @Override
     public int store(CurrencyStorageComponent storage, String resource, int amount) {
-        if (Objects.equals(resource, currency)) {
+        if (Objects.equals(resource, CURRENCY)) {
             storage.amount += amount;
         }
         return 0;
@@ -30,7 +27,7 @@ public class CurrencyStorageHandler implements StorageComponentHandler<CurrencyS
     @Override
     public int draw(CurrencyStorageComponent storage, String resource, int amount) {
         int leftOver = 0;
-        if (Objects.equals(resource, currency)) {
+        if (Objects.equals(resource, CURRENCY)) {
             if (storage.amount >= amount) {
                 storage.amount -= amount;
             } else {
@@ -43,7 +40,7 @@ public class CurrencyStorageHandler implements StorageComponentHandler<CurrencyS
 
     @Override
     public int availableResourceAmount(CurrencyStorageComponent storage, String resource) {
-        if (Objects.equals(resource, currency)) {
+        if (Objects.equals(resource, CURRENCY)) {
             return storage.amount;
         } else {
             return 0;
@@ -58,7 +55,7 @@ public class CurrencyStorageHandler implements StorageComponentHandler<CurrencyS
     @Override
     public Set<String> availableResourceTypes(CurrencyStorageComponent storage) {
         Set<String> types = new HashSet<>();
-        types.add(currency);
+        types.add(CURRENCY);
         return types;
     }
 
@@ -74,6 +71,6 @@ public class CurrencyStorageHandler implements StorageComponentHandler<CurrencyS
 
     @Override
     public String getTestResource() {
-        return currency;
+        return CURRENCY;
     }
 }

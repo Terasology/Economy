@@ -6,6 +6,7 @@ import com.google.common.base.Preconditions;
 import org.terasology.economy.components.PurchasableComponent;
 import org.terasology.economy.components.ValueComponent;
 import org.terasology.economy.events.GiveItemTypeEvent;
+import org.terasology.engine.entitySystem.systems.RegisterMode;
 import org.terasology.engine.world.block.Block;
 import org.terasology.engine.world.block.BlockExplorer;
 import org.terasology.engine.world.block.BlockManager;
@@ -55,14 +56,13 @@ public class ShopManager extends BaseComponentSystem {
 
     @Override
     public void postBegin() {
-        BlockExplorer blockExplorer = new BlockExplorer(assetManager);
-
         purchasableItems = assetManager.getLoadedAssets(Prefab.class)
                 .stream()
                 .filter(prefab -> prefab.hasComponent(ItemComponent.class)
                         && prefab.hasComponent(PurchasableComponent.class))
                 .collect(Collectors.toSet());
 
+        BlockExplorer blockExplorer = new BlockExplorer(assetManager);
         Set<BlockUri> blocks = new HashSet<>();
         blocks.addAll(blockManager.listRegisteredBlockUris());
         blocks.addAll(blockExplorer.getAvailableBlockFamilies());

@@ -3,13 +3,13 @@
 package org.terasology.economy.components;
 
 import org.terasology.engine.world.block.items.AddToBlockBasedItem;
-import org.terasology.gestalt.entitysystem.component.Component;
+import org.terasology.gestalt.entitysystem.component.EmptyComponent;
 
 /**
  * Indicates that the item can be bought and thus will be available in the shop
  */
 @AddToBlockBasedItem
-public class PurchasableComponent implements Component<PurchasableComponent> {
+public class PurchasableComponent extends EmptyComponent<PurchasableComponent> {
     @Override
     public void copyFrom(PurchasableComponent other) {
     }
