@@ -3,15 +3,23 @@
 package org.terasology.economy;
 
 import com.google.common.base.Preconditions;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.terasology.economy.components.PurchasableComponent;
 import org.terasology.economy.components.ValueComponent;
 import org.terasology.economy.events.GiveItemTypeEvent;
+import org.terasology.economy.events.WalletTransactionEvent;
+import org.terasology.economy.systems.WalletAuthoritySystem;
+import org.terasology.engine.entitySystem.entity.EntityManager;
+import org.terasology.engine.entitySystem.event.ReceiveEvent;
 import org.terasology.engine.entitySystem.systems.RegisterMode;
+import org.terasology.engine.logic.inventory.events.GiveItemEvent;
 import org.terasology.engine.world.block.Block;
 import org.terasology.engine.world.block.BlockExplorer;
 import org.terasology.engine.world.block.BlockManager;
 import org.terasology.engine.world.block.BlockUri;
 import org.terasology.engine.world.block.family.BlockFamily;
+import org.terasology.engine.world.block.items.BlockItemFactory;
 import org.terasology.gestalt.assets.management.AssetManager;
 import org.terasology.engine.entitySystem.ComponentContainer;
 import org.terasology.engine.entitySystem.entity.EntityRef;
@@ -22,6 +30,7 @@ import org.terasology.engine.logic.inventory.ItemComponent;
 import org.terasology.engine.logic.players.LocalPlayer;
 import org.terasology.engine.registry.In;
 import org.terasology.engine.registry.Share;
+import org.terasology.module.inventory.systems.InventoryAuthoritySystem;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -33,8 +42,8 @@ import java.util.stream.Collectors;
 @RegisterSystem
 @Share(ShopManager.class)
 public class ShopManager extends BaseComponentSystem {
-    private Set<Block> purchasableBlocks = new HashSet<>();
-    private Set<Prefab> purchasableItems = new HashSet<>();
+
+    private static final Logger logger = LoggerFactory.getLogger(InventoryAuthoritySystem.class);
 
     @In
     private AssetManager assetManager;
@@ -42,6 +51,16 @@ public class ShopManager extends BaseComponentSystem {
     private BlockManager blockManager;
     @In
     private LocalPlayer localPlayer;
+    @In
+    private WalletAuthoritySystem walletAuthoritySystem;
+    @In
+    private EntityManager entityManager;
+
+    private BlockItemFactory blockItemFactory;
+
+    private Set<Block> purchasableBlocks = new HashSet<>();
+    private Set<Prefab> purchasableItems = new HashSet<>();
+
     /**
      * Gets how much money a ware will cost.
      * Tries to use the cost on the value component.
@@ -56,6 +75,8 @@ public class ShopManager extends BaseComponentSystem {
 
     @Override
     public void postBegin() {
+        blockItemFactory = new BlockItemFactory(entityManager);
+
         purchasableItems = assetManager.getLoadedAssets(Prefab.class)
                 .stream()
                 .filter(prefab -> prefab.hasComponent(ItemComponent.class)
@@ -104,5 +125,27 @@ public class ShopManager extends BaseComponentSystem {
     public void purchaseItem(Prefab prefab) {
         EntityRef character = localPlayer.getCharacterEntity();
         character.send(new GiveItemTypeEvent(prefab));
+    }
+
+    void performTransaction(EntityRef entity, EntityRef item) {
+        int cost = ShopManager.getWareCost(item);
+        if (walletAuthoritySystem.isValidTransaction(entity, -cost)) {
+            entity.send(new WalletTransactionEvent(-cost));
+            item.send(new GiveItemEvent(entity));
+        }
+    }
+
+    @ReceiveEvent(netFilter = RegisterMode.AUTHORITY)
+    public void onPurchaseItem(GiveItemTypeEvent event, EntityRef entity) {
+        if (event.getTargetPrefab() != null && event.getTargetPrefab().hasComponent(ValueComponent.class)) {
+            EntityRef item = entityManager.create(event.getTargetPrefab());
+            performTransaction(entity, item);
+        } else if (event.getBlockURI() != null) {
+            BlockFamily blockFamily = blockManager.getBlockFamily(event.getBlockURI());
+            EntityRef blockItem = blockItemFactory.newInstance(blockFamily);
+            performTransaction(entity, blockItem);
+        } else {
+            logger.warn("Skipping item purchase action for undefined or non-purchasable item: {}", event);
+        }
     }
 }
