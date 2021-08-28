@@ -15,9 +15,9 @@ import java.util.Set;
  * Handler for currency stores.
  */
 public class CurrencyStorageHandler implements StorageComponentHandler<CurrencyStorageComponent> {
-    private final String CURRENCY = "currency";
+    private static final Logger logger = LoggerFactory.getLogger(CurrencyStorageHandler.class);
 
-    private Logger logger = LoggerFactory.getLogger(CurrencyStorageHandler.class);
+    private static final String CURRENCY = "currency";
 
     @Override
     public int store(CurrencyStorageComponent storage, String resource, int amount) {
