@@ -43,19 +43,21 @@ public class ItemAuthoritySystem extends BaseComponentSystem {
     public void onGiveItemToPlayer(GiveItemTypeEvent event, EntityRef entity) {
         if (event.getTargetPrefab() != null && event.getTargetPrefab().hasComponent(ValueComponent.class)) {
             EntityRef item = entityManager.create(event.getTargetPrefab());
-            if (walletAuthoritySystem.isValidTransaction(entity, -item.getComponent(ValueComponent.class).value)) {
-                entity.send(new WalletTransactionEvent(-item.getComponent(ValueComponent.class).value));
-                item.send(new GiveItemEvent(entity));
-            }
+            buyItem(entity, item);
         } else if (event.getBlockURI() != null) {
             BlockFamily blockFamily = blockManager.getBlockFamily(event.getBlockURI());
             EntityRef blockItem = blockItemFactory.newInstance(blockFamily);
-            if (walletAuthoritySystem.isValidTransaction(entity, -blockItem.getComponent(ValueComponent.class).value)) {
-                entity.send(new WalletTransactionEvent(-blockItem.getComponent(ValueComponent.class).value));
-                blockItem.send(new GiveItemEvent(entity));
-            }
+            buyItem(entity, blockItem);
         } else {
             logger.warn("Prefab/String is null");
         }
     }
+
+    public void buyItem(EntityRef entity, EntityRef item) {
+        if (walletAuthoritySystem.isValidTransaction(entity, -item.getComponent(ValueComponent.class).value)) {
+            entity.send(new WalletTransactionEvent(-item.getComponent(ValueComponent.class).value));
+            item.send(new GiveItemEvent(entity));
+        }
+    }
 }
+
