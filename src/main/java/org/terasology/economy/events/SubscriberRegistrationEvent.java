@@ -16,7 +16,7 @@
 package org.terasology.economy.events;
 
 
-import org.terasology.engine.entitySystem.event.Event;
+import org.terasology.gestalt.entitysystem.event.Event;
 
 public class SubscriberRegistrationEvent implements Event {
 
