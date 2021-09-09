@@ -2,7 +2,6 @@
 // SPDX-License-Identifier: Apache-2.0
 package org.terasology.economy.handler;
 
-
 import org.terasology.economy.components.InfiniteStorageComponent;
 import org.terasology.gestalt.entitysystem.component.Component;
 
@@ -11,7 +10,8 @@ import java.util.Set;
 
 public class InfiniteStorageHandler implements StorageComponentHandler<InfiniteStorageComponent> {
 
-    public InfiniteStorageHandler() {}
+    public InfiniteStorageHandler() { }
+
     @Override
     public int store(InfiniteStorageComponent infiniteStorageComponent, String resource, int amount) {
         Map<String, Integer> inventory = infiniteStorageComponent.inventory;

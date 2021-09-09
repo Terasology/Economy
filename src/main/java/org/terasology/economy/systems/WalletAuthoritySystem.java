@@ -1,4 +1,4 @@
-// Copyright 2020 The Terasology Foundation
+// Copyright 2021 The Terasology Foundation
 // SPDX-License-Identifier: Apache-2.0
 package org.terasology.economy.systems;
 
@@ -26,10 +26,10 @@ import org.terasology.engine.world.time.WorldTimeEvent;
 @RegisterSystem(RegisterMode.AUTHORITY)
 public class WalletAuthoritySystem extends BaseComponentSystem {
 
-    private Logger logger = LoggerFactory.getLogger(WalletAuthoritySystem.class);
+    private static final Logger logger = LoggerFactory.getLogger(WalletAuthoritySystem.class);
 
     @In
-    public EntityManager entityManager;
+    EntityManager entityManager;
 
     @ReceiveEvent
     public void onWorldTimeEvent(WorldTimeEvent worldTimeEvent, EntityRef entity) {
@@ -66,7 +66,7 @@ public class WalletAuthoritySystem extends BaseComponentSystem {
 
     /**
      * Checks if the requested transaction is valid depending on the balance in the player's wallet
-     * @param delta: the change in the wallet after the transaction
+     * @param delta the change in the wallet after the transaction
      * @return true if the wallet balance isn't negative after the transaction
      */
     public boolean isValidTransaction(EntityRef characterEntity, int delta) {
