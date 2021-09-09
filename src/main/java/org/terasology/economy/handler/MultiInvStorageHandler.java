@@ -18,7 +18,6 @@ import org.terasology.engine.registry.In;
 import org.terasology.engine.registry.Share;
 import org.terasology.engine.utilities.Assets;
 import org.terasology.engine.world.block.BlockManager;
-import org.terasology.engine.world.block.entity.BlockCommands;
 import org.terasology.engine.world.block.family.BlockFamily;
 import org.terasology.engine.world.block.items.BlockItemComponent;
 import org.terasology.engine.world.block.items.BlockItemFactory;
