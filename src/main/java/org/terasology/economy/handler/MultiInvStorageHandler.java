@@ -39,7 +39,9 @@ import java.util.Set;
 @Share(MultiInvStorageHandler.class)
 @RegisterSystem(RegisterMode.AUTHORITY)
 public class MultiInvStorageHandler extends BaseComponentSystem implements StorageComponentHandler<MultiInvStorageComponent> {
+
     private static final Logger logger = LoggerFactory.getLogger(MultiInvStorageHandler.class);
+
     @In
     private AssetManager assetManager;
 
@@ -53,6 +55,7 @@ public class MultiInvStorageHandler extends BaseComponentSystem implements Stora
     private InventoryManager inventoryManager;
 
     private BlockItemFactory blockItemFactory;
+
     private ResourceUrn blockItemBase;
 
     @Override
@@ -68,55 +71,56 @@ public class MultiInvStorageHandler extends BaseComponentSystem implements Stora
     @Override
     public int store(MultiInvStorageComponent multiInvStorageComponent, String resource, int amount) {
         EntityRef item = getItemEntity(resource);
-        byte byteAmount;
+
         if (item == EntityRef.NULL) {
             return amount;
         }
 
-
-
-
-        for (EntityRef entityRef : multiInvStorageComponent.chests) {
-            int amountForChest = getItemCapacityForChest(entityRef, item);
-            amountForChest = (amountForChest > amount) ? amount : amountForChest;
+        int remaining = amount;
+        for (EntityRef chest : multiInvStorageComponent.chests) {
+            final int amountForChest = Math.min(getItemCapacityForChest(chest, item), remaining);
+            final byte byteAmount;
             if (amountForChest >= Byte.MAX_VALUE) {
                 byteAmount = Byte.MAX_VALUE;
             } else {
                 byteAmount = (byte) amountForChest;
             }
+
             ItemComponent itemComponent = item.getComponent(ItemComponent.class);
             itemComponent.stackCount = byteAmount;
             item.saveComponent(itemComponent);
-            inventoryManager.giveItem(entityRef, EntityRef.NULL, item);
-            amount -= amountForChest;
 
-            if (amount == 0) {
+            inventoryManager.giveItem(chest, EntityRef.NULL, item);
+
+            remaining -= byteAmount;
+
+            if (remaining == 0) {
                 return 0;
             }
         }
-        return amount;
-
+        return remaining;
     }
 
     @Override
     public int draw(MultiInvStorageComponent multiInvStorageComponent, String resource, int amount) {
         EntityRef item = getItemEntity(resource);
 
-        for (EntityRef entityRef : multiInvStorageComponent.chests) {
-            int amountForChest = getItemCountForChest(entityRef, item);
+        int remaining = amount;
+        for (EntityRef chest : multiInvStorageComponent.chests) {
+            int amountForChest = getItemCountForChest(chest, item);
             while (amountForChest != 0) {
-                int slot = getSlotWithItem(entityRef, item);
+                int slot = getSlotWithItem(chest, item);
                 if (slot == -1) {
                     break;
                 }
-                int amountForSlot = InventoryUtils.getStackCount(InventoryUtils.getItemAt(entityRef, slot));
-                if (inventoryManager.removeItem(entityRef, EntityRef.NULL, slot, true, amountForSlot) != null) {
-                    amount -= amountForSlot;
+                int amountForSlot = InventoryUtils.getStackCount(InventoryUtils.getItemAt(chest, slot));
+                if (inventoryManager.removeItem(chest, EntityRef.NULL, slot, true, amountForSlot) != null) {
+                    remaining -= amountForSlot;
                 }
             }
 
         }
-        return amount;
+        return remaining;
     }
 
     @Override
@@ -133,11 +137,7 @@ public class MultiInvStorageHandler extends BaseComponentSystem implements Stora
     public Set<String> availableResourceTypes(MultiInvStorageComponent multiInvStorageComponent) {
         Set<String> result = new HashSet<>();
         for (EntityRef entityRef : multiInvStorageComponent.chests) {
-            for (String resource : getResourceTypesOfInventory(entityRef)) {
-                if (!result.contains(resource)) {
-                    result.add(resource);
-                }
-            }
+            result.addAll(getResourceTypesOfInventory(entityRef));
         }
         return result;
     }

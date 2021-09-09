@@ -70,10 +70,14 @@ public class MarketLogisticSystem extends BaseComponentSystem {
 
     @ReceiveEvent
     public void conditionedProduction(ConditionedProductionEvent event, EntityRef entityRef) {
-        if ((event.getConsumptionResourcePackages() == null
-                || checkResourcesFullyAvailable(event.getConsumptionResourcePackages(), event.getConsumptionStorage()))
-                && (event.getConsumptionResourcePackages() == null
-                || checkCapacityFullyAvailable(event.getProductionResourcePackages(), event.getProductionStorage()))) {
+        boolean resourcesFullyAvailable =
+                event.getConsumptionResourcePackages() == null
+                        || checkResourcesFullyAvailable(event.getConsumptionResourcePackages(), event.getConsumptionStorage());
+        boolean capacityFullAvailable =
+                event.getConsumptionResourcePackages() == null
+                        || checkCapacityFullyAvailable(event.getProductionResourcePackages(), event.getProductionStorage());
+
+        if (resourcesFullyAvailable && capacityFullAvailable) {
             if (event.getConsumptionResourcePackages() != null) {
                 for (Map.Entry<String, Integer> resource : event.getConsumptionResourcePackages().entrySet()) {
                     event.getConsumptionStorage().send(new ResourceDestructionEvent(resource.getKey(), resource.getValue()));

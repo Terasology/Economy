@@ -13,6 +13,7 @@ import java.util.Set;
  * Handler for currency stores.
  */
 public class CurrencyStorageHandler implements StorageComponentHandler<CurrencyStorageComponent> {
+    private static final Logger logger = LoggerFactory.getLogger(CurrencyStorageHandler.class);
 
     private static final String CURRENCY = "currency";
 
