@@ -2,7 +2,6 @@
 // SPDX-License-Identifier: Apache-2.0
 package org.terasology.economy.handler;
 
-
 import org.terasology.gestalt.entitysystem.component.Component;
 
 import java.util.Set;

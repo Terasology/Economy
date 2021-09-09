@@ -26,7 +26,7 @@ import java.util.Map;
 @RegisterSystem(RegisterMode.AUTHORITY)
 public class TestSystem extends BaseComponentSystem {
 
-    private Logger logger = LoggerFactory.getLogger(TestSystem.class);
+    private static final Logger logger = LoggerFactory.getLogger(TestSystem.class);
 
     @In
     private EntityManager entityManager;
@@ -51,16 +51,16 @@ public class TestSystem extends BaseComponentSystem {
         this.storageHandlerLibrary = storageHandlerLibrary;
     }
 
-    public boolean testStorageComponent(StorageComponentHandler componentHandler) {
+    public boolean testStorageComponent(StorageComponentHandler newComponentHandler) {
         storageA = entityManager.create();
         storageB = entityManager.create();
-        this.componentHandler = componentHandler;
-        Component storageComponentA = componentHandler.getTestComponent();
-        Component storageComponentB = componentHandler.getTestComponent();
-        componentClass = componentHandler.getStorageComponentClass();
+        this.componentHandler = newComponentHandler;
+        Component storageComponentA = newComponentHandler.getTestComponent();
+        Component storageComponentB = newComponentHandler.getTestComponent();
+        componentClass = newComponentHandler.getStorageComponentClass();
         storageA.addComponent(storageComponentA);
         storageB.addComponent(storageComponentB);
-        this.testResource = componentHandler.getTestResource();
+        this.testResource = newComponentHandler.getTestResource();
         return (createAndDestroy() && draw() && store() && conditionedProduction());
     }
 
@@ -94,13 +94,13 @@ public class TestSystem extends BaseComponentSystem {
         Component containerB = storageB.getComponent(componentClass);
 
         if (!(componentHandler.availableResourceAmount(containerA, testResource) == 0)) {
-            logger.error("Resource draw unsuccessful for storage component " + componentClass.getName() +
-                    ". Container to draw from has not lost the right amount of resources!");
+            logger.error("Resource draw unsuccessful for storage component {}. "
+                    + "Container to draw from has not lost the right amount of resources!", componentClass.getName());
             return false;
         }
         if (!(componentHandler.availableResourceAmount(containerB, testResource) == 10)) {
-            logger.error("Resource draw unsuccessful for storage component " + componentClass.getName() +
-                    ". Container to draw into has not gained the right amount of resources!");
+            logger.error("Resource draw unsuccessful for storage component {}. "
+                    + "Container to draw into has not gained the right amount of resources!", componentClass.getName());
             return false;
         }
         storageA.send(new ResourceDestructionEvent(testResource, 999));
@@ -118,13 +118,13 @@ public class TestSystem extends BaseComponentSystem {
         Component containerB = storageB.getComponent(componentClass);
 
         if (!(componentHandler.availableResourceAmount(containerA, testResource) == 0)) {
-            logger.error("Resource store unsuccessful for storage component " + componentClass.getName() +
-                    ". Container to store from has not lost the right amount of resources!");
+            logger.error("Resource store unsuccessful for storage component {}. "
+                    + "Container to store from has not lost the right amount of resources!", componentClass.getName());
             return false;
         }
         if (!(componentHandler.availableResourceAmount(containerB, testResource) == 10)) {
-            logger.error("Resource draw unsuccessful for storage component " + componentClass.getName() +
-                    ". Container to store into has not gained the right amount of resources!");
+            logger.error("Resource draw unsuccessful for storage component {}. "
+                    + "Container to store into has not gained the right amount of resources!", componentClass.getName());
             return false;
         }
         storageA.send(new ResourceDestructionEvent(testResource, 999));
@@ -146,13 +146,13 @@ public class TestSystem extends BaseComponentSystem {
 
 
         if (!(componentHandler.availableResourceAmount(containerA, testResource) == 0)) {
-            logger.error("Resource consumption unsuccessful for storage component " + componentClass.getName() +
-                    ". Container to store from has not lost the right amount of resources!");
+            logger.error("Resource consumption unsuccessful for storage component {}. "
+                    + "Container to store from has not lost the right amount of resources!", componentClass.getName());
             return false;
         }
         if (!(componentHandler.availableResourceAmount(containerB, testResource) == 10)) {
-            logger.error("Resource production unsuccessful for storage component " + componentClass.getName() +
-                    ". Container to store into has not gained the right amount of resources!");
+            logger.error("Resource production unsuccessful for storage component {}. "
+                    + "Container to store into has not gained the right amount of resources!", componentClass.getName());
             return false;
         }
         storageA.send(new ResourceDestructionEvent(testResource, 999));
@@ -162,13 +162,13 @@ public class TestSystem extends BaseComponentSystem {
         storageA.send(new ResourceCreationEvent(testResource, 9));
         storageA.send(new ConditionedProductionEvent(consumptionPackage, productionPackage, storageA, storageB));
         if (!(componentHandler.availableResourceAmount(containerA, testResource) == 9)) {
-            logger.error("Resource consumption unsuccessful for storage component " + componentClass.getName() +
-                    ". Container to store from has not lost the right amount of resources!");
+            logger.error("Resource consumption unsuccessful for storage component {}. "
+                    + "Container to store from has not lost the right amount of resources!", componentClass.getName());
             return false;
         }
         if (!(componentHandler.availableResourceAmount(containerB, testResource) == 0)) {
-            logger.error("Resource production unsuccessful for storage component " + componentClass.getName() +
-                    ". Container to store into has not gained the right amount of resources!");
+            logger.error("Resource production unsuccessful for storage component {}. "
+                    + "Container to store into has not gained the right amount of resources!", componentClass.getName());
             return false;
         }
         return true;

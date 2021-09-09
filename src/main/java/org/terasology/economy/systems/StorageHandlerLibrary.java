@@ -8,7 +8,6 @@ import org.slf4j.LoggerFactory;
 import org.terasology.economy.handler.CurrencyStorageHandler;
 import org.terasology.economy.handler.InfiniteStorageHandler;
 import org.terasology.economy.handler.StorageComponentHandler;
-import org.terasology.engine.entitySystem.entity.EntityManager;
 import org.terasology.engine.entitySystem.entity.EntityRef;
 import org.terasology.engine.entitySystem.systems.BaseComponentSystem;
 import org.terasology.engine.entitySystem.systems.RegisterMode;
@@ -24,13 +23,12 @@ import java.util.Optional;
 @Share(value = StorageHandlerLibrary.class)
 @RegisterSystem(RegisterMode.AUTHORITY)
 public class StorageHandlerLibrary extends BaseComponentSystem {
+    private static final Logger logger = LoggerFactory.getLogger(StorageHandlerLibrary.class);
+
     @In
     TestSystem testSystem;
-    @In
-    EntityManager entityManager;
 
-    private Logger logger = LoggerFactory.getLogger(StorageHandlerLibrary.class);
-    private Map<String, StorageComponentHandler> handlerMap = new HashMap<>();
+    private final Map<String, StorageComponentHandler> handlerMap = new HashMap<>();
 
     @Override
     public void postBegin() {

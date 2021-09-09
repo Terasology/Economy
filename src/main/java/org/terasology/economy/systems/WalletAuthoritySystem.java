@@ -1,4 +1,4 @@
-// Copyright 2020 The Terasology Foundation
+// Copyright 2021 The Terasology Foundation
 // SPDX-License-Identifier: Apache-2.0
 package org.terasology.economy.systems;
 
@@ -26,8 +26,10 @@ import org.terasology.engine.world.time.WorldTimeEvent;
 @RegisterSystem(RegisterMode.AUTHORITY)
 public class WalletAuthoritySystem extends BaseComponentSystem {
 
+    private static final Logger logger = LoggerFactory.getLogger(WalletAuthoritySystem.class);
+
     @In
-    public EntityManager entityManager;
+    EntityManager entityManager;
 
     private Logger logger = LoggerFactory.getLogger(WalletAuthoritySystem.class);
 
