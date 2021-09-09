@@ -19,7 +19,7 @@ public class InfiniteStorageComponent implements Component<InfiniteStorageCompon
     public InfiniteStorageComponent(int i) {
     }
 
-    public InfiniteStorageComponent() {}
+    public InfiniteStorageComponent() { }
 
     @Override
     public void copyFrom(InfiniteStorageComponent other) {

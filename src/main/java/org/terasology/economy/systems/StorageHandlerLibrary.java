@@ -24,14 +24,14 @@ import java.util.Optional;
 @Share(value = StorageHandlerLibrary.class)
 @RegisterSystem(RegisterMode.AUTHORITY)
 public class StorageHandlerLibrary extends BaseComponentSystem {
-
-    private Logger logger = LoggerFactory.getLogger(StorageHandlerLibrary.class);
-    private Map<String, StorageComponentHandler> handlerMap = new HashMap<>();
-
     @In
     TestSystem testSystem;
     @In
     EntityManager entityManager;
+
+    private Logger logger = LoggerFactory.getLogger(StorageHandlerLibrary.class);
+    private Map<String, StorageComponentHandler> handlerMap = new HashMap<>();
+
     @Override
     public void postBegin() {
         registerHandler(new InfiniteStorageHandler());

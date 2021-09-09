@@ -78,12 +78,10 @@ public class MultiInvStorageHandler extends BaseComponentSystem implements Stora
             return amount;
         }
 
-
-
-
+        int remainingAmount = amount;
         for (EntityRef entityRef : multiInvStorageComponent.chests) {
             int amountForChest = getItemCapacityForChest(entityRef, item);
-            amountForChest = (amountForChest > amount) ? amount : amountForChest;
+            amountForChest = Math.min(amountForChest, amount);
             if (amountForChest >= Byte.MAX_VALUE) {
                 byteAmount = Byte.MAX_VALUE;
             } else {
@@ -93,13 +91,13 @@ public class MultiInvStorageHandler extends BaseComponentSystem implements Stora
             itemComponent.stackCount = byteAmount;
             item.saveComponent(itemComponent);
             inventoryManager.giveItem(entityRef, EntityRef.NULL, item);
-            amount -= amountForChest;
+            remainingAmount -= amountForChest;
 
-            if (amount == 0) {
+            if (remainingAmount == 0) {
                 return 0;
             }
         }
-        return amount;
+        return remainingAmount;
 
     }
 
@@ -107,6 +105,7 @@ public class MultiInvStorageHandler extends BaseComponentSystem implements Stora
     public int draw(MultiInvStorageComponent multiInvStorageComponent, String resource, int amount) {
         EntityRef item = getItemEntity(resource);
 
+        int remainingAmount = amount;
         for (EntityRef entityRef : multiInvStorageComponent.chests) {
             int amountForChest = getItemCountForChest(entityRef, item);
             while (amountForChest != 0) {
@@ -116,12 +115,12 @@ public class MultiInvStorageHandler extends BaseComponentSystem implements Stora
                 }
                 int amountForSlot = InventoryUtils.getStackCount(InventoryUtils.getItemAt(entityRef, slot));
                 if (inventoryManager.removeItem(entityRef, EntityRef.NULL, slot, true, amountForSlot) != null) {
-                    amount -= amountForSlot;
+                    remainingAmount -= amountForSlot;
                 }
             }
 
         }
-        return amount;
+        return remainingAmount;
     }
 
     @Override
