@@ -1,6 +1,6 @@
 {
   "id": "Economy",
-  "version": "1.1.0",
+  "version": "1.2.0-SNAPSHOT",
   "author": "Cpt Crunchy",
   "displayName": "Economy",
   "description": "Utility module to give entities the ability to trade / produce and consume resources. A simple trading interface and currency will be introduced. Additionally the market should react to the availability of resources by adjusting the prices accordingly.",
