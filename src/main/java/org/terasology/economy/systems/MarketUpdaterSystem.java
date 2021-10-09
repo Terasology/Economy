@@ -6,18 +6,15 @@ import com.google.common.collect.Multimap;
 import com.google.common.collect.MultimapBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.terasology.gestalt.assets.management.AssetManager;
 import org.terasology.economy.components.MarketSubscriberComponent;
 import org.terasology.economy.events.ConditionedProductionEvent;
 import org.terasology.economy.events.SubscriberRegistrationEvent;
-import org.terasology.engine.entitySystem.entity.EntityManager;
 import org.terasology.engine.entitySystem.entity.EntityRef;
 import org.terasology.engine.entitySystem.event.ReceiveEvent;
 import org.terasology.engine.entitySystem.systems.BaseComponentSystem;
 import org.terasology.engine.entitySystem.systems.RegisterMode;
 import org.terasology.engine.entitySystem.systems.RegisterSystem;
 import org.terasology.engine.entitySystem.systems.UpdateSubscriberSystem;
-import org.terasology.engine.registry.In;
 import org.terasology.engine.registry.Share;
 
 import java.util.Collection;
@@ -30,15 +27,9 @@ import java.util.Collection;
 @RegisterSystem(RegisterMode.AUTHORITY)
 public class MarketUpdaterSystem extends BaseComponentSystem implements UpdateSubscriberSystem {
 
-    private Logger logger = LoggerFactory.getLogger(MarketUpdaterSystem.class);
+    private static final Logger logger = LoggerFactory.getLogger(MarketUpdaterSystem.class);
     private int timer = 300;
     private Multimap<Integer, EntityRef> productionIntervalLedger;
-
-    @In
-    private AssetManager assetManager;
-
-    @In
-    private EntityManager entityManager;
 
     @Override
     public void postBegin() {

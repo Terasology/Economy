@@ -217,7 +217,6 @@ public class MultiInvStorageHandler extends BaseComponentSystem implements Stora
 
     private int getItemCapacityForChest(EntityRef entityRef, EntityRef item) {
         int capacity = 0;
-        InventoryComponent inventoryComponent = entityRef.getComponent(InventoryComponent.class);
         int slotCount = InventoryUtils.getSlotCount(entityRef);
         ItemComponent itemComponent = item.getComponent(ItemComponent.class);
         if (itemComponent == null) {

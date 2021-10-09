@@ -3,10 +3,12 @@
 package org.terasology.economy.events;
 
 import org.terasology.engine.entitySystem.event.Event;
+import org.terasology.engine.network.ServerEvent;
 
 /**
  * Fired when a currency transaction must occur.
  */
+@ServerEvent
 public class WalletTransactionEvent implements Event {
 
     /**

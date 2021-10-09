@@ -40,7 +40,7 @@ import java.util.Set;
 @RegisterSystem(RegisterMode.AUTHORITY)
 public class MarketLogisticSystem extends BaseComponentSystem {
 
-    private Logger logger = LoggerFactory.getLogger(MarketLogisticSystem.class);
+    private static final Logger logger = LoggerFactory.getLogger(MarketLogisticSystem.class);
 
     @In
     private StorageHandlerLibrary storageHandlerLibrary;
