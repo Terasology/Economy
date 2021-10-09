@@ -2,6 +2,8 @@
 // SPDX-License-Identifier: Apache-2.0
 package org.terasology.economy.handler;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.terasology.economy.components.CurrencyStorageComponent;
 import org.terasology.gestalt.entitysystem.component.Component;
 
