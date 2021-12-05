@@ -40,7 +40,7 @@ import java.util.Set;
 @RegisterSystem(RegisterMode.AUTHORITY)
 public class MarketLogisticSystem extends BaseComponentSystem {
 
-    private Logger logger = LoggerFactory.getLogger(MarketLogisticSystem.class);
+    private static final Logger logger = LoggerFactory.getLogger(MarketLogisticSystem.class);
 
     @In
     private StorageHandlerLibrary storageHandlerLibrary;
@@ -70,8 +70,14 @@ public class MarketLogisticSystem extends BaseComponentSystem {
 
     @ReceiveEvent
     public void conditionedProduction(ConditionedProductionEvent event, EntityRef entityRef) {
-        if ((event.getConsumptionResourcePackages() == null || checkResourcesFullyAvailable(event.getConsumptionResourcePackages(), event.getConsumptionStorage()))
-                && (event.getConsumptionResourcePackages() == null || checkCapacityFullyAvailable(event.getProductionResourcePackages(), event.getProductionStorage()))) {
+        boolean resourcesFullyAvailable =
+                event.getConsumptionResourcePackages() == null
+                        || checkResourcesFullyAvailable(event.getConsumptionResourcePackages(), event.getConsumptionStorage());
+        boolean capacityFullAvailable =
+                event.getConsumptionResourcePackages() == null
+                        || checkCapacityFullyAvailable(event.getProductionResourcePackages(), event.getProductionStorage());
+
+        if (resourcesFullyAvailable && capacityFullAvailable) {
             if (event.getConsumptionResourcePackages() != null) {
                 for (Map.Entry<String, Integer> resource : event.getConsumptionResourcePackages().entrySet()) {
                     event.getConsumptionStorage().send(new ResourceDestructionEvent(resource.getKey(), resource.getValue()));
@@ -131,11 +137,11 @@ public class MarketLogisticSystem extends BaseComponentSystem {
         Map<Component, StorageComponentHandler> targetStorageComponents = storageHandlerLibrary.getHandlerComponentMapForEntity(event.getTarget());
         Map<Component, StorageComponentHandler> originStorageComponents = storageHandlerLibrary.getHandlerComponentMapForEntity(entityRef);
 
-        if(targetStorageComponents.isEmpty()) {
+        if (targetStorageComponents.isEmpty()) {
             logger.warn("Attempted to draw out resources from a target with no valid storage. Entity: " + event.getTarget().toString());
             return -1;
         }
-        if(originStorageComponents.isEmpty()) {
+        if (originStorageComponents.isEmpty()) {
             logger.warn("Attempted to store resources in an origin with no valid storage. Entity: " + entityRef.toString());
             return -1;
         }
@@ -167,11 +173,11 @@ public class MarketLogisticSystem extends BaseComponentSystem {
         Map<Component, StorageComponentHandler> targetStorageComponents = storageHandlerLibrary.getHandlerComponentMapForEntity(event.getTarget());
         Map<Component, StorageComponentHandler> originStorageComponents = storageHandlerLibrary.getHandlerComponentMapForEntity(entityRef);
 
-        if(targetStorageComponents.isEmpty()) {
+        if (targetStorageComponents.isEmpty()) {
             logger.warn("Attempted to store resources in a target with no valid storage. Entity: " + event.getTarget().toString());
             return -1;
         }
-        if(originStorageComponents.isEmpty()) {
+        if (originStorageComponents.isEmpty()) {
             logger.warn("Attempted to draw out resources from an origin with no valid storage. Entity: " + entityRef.toString());
             return -1;
         }
