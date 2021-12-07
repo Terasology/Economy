@@ -4,9 +4,9 @@ package org.terasology.economy.events;
 
 import com.google.common.base.MoreObjects;
 import org.terasology.engine.entitySystem.entity.EntityRef;
-import org.terasology.engine.entitySystem.event.Event;
 import org.terasology.engine.entitySystem.prefab.Prefab;
 import org.terasology.engine.network.ServerEvent;
+import org.terasology.gestalt.entitysystem.event.Event;
 
 /**
  * A trigger event to start a purchase transaction on the authority for the specified item or block.

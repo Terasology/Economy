@@ -10,10 +10,19 @@ import org.terasology.economy.components.ValueComponent;
 import org.terasology.economy.events.PurchaseItemEvent;
 import org.terasology.economy.events.WalletTransactionEvent;
 import org.terasology.economy.systems.WalletAuthoritySystem;
+import org.terasology.engine.entitySystem.ComponentContainer;
 import org.terasology.engine.entitySystem.entity.EntityManager;
-import org.terasology.engine.entitySystem.event.ReceiveEvent;
+import org.terasology.engine.entitySystem.entity.EntityRef;
+import org.terasology.engine.entitySystem.prefab.Prefab;
+import org.terasology.engine.entitySystem.systems.BaseComponentSystem;
+import org.terasology.engine.entitySystem.systems.NetFilterEvent;
 import org.terasology.engine.entitySystem.systems.RegisterMode;
+import org.terasology.engine.entitySystem.systems.RegisterSystem;
+import org.terasology.engine.logic.inventory.ItemComponent;
 import org.terasology.engine.logic.inventory.events.GiveItemEvent;
+import org.terasology.engine.logic.players.LocalPlayer;
+import org.terasology.engine.registry.In;
+import org.terasology.engine.registry.Share;
 import org.terasology.engine.world.block.Block;
 import org.terasology.engine.world.block.BlockExplorer;
 import org.terasology.engine.world.block.BlockManager;
@@ -21,15 +30,7 @@ import org.terasology.engine.world.block.BlockUri;
 import org.terasology.engine.world.block.family.BlockFamily;
 import org.terasology.engine.world.block.items.BlockItemFactory;
 import org.terasology.gestalt.assets.management.AssetManager;
-import org.terasology.engine.entitySystem.ComponentContainer;
-import org.terasology.engine.entitySystem.entity.EntityRef;
-import org.terasology.engine.entitySystem.prefab.Prefab;
-import org.terasology.engine.entitySystem.systems.BaseComponentSystem;
-import org.terasology.engine.entitySystem.systems.RegisterSystem;
-import org.terasology.engine.logic.inventory.ItemComponent;
-import org.terasology.engine.logic.players.LocalPlayer;
-import org.terasology.engine.registry.In;
-import org.terasology.engine.registry.Share;
+import org.terasology.gestalt.entitysystem.event.ReceiveEvent;
 import org.terasology.module.inventory.systems.InventoryAuthoritySystem;
 
 import java.util.HashSet;
@@ -135,7 +136,8 @@ public class ShopManager extends BaseComponentSystem {
         }
     }
 
-    @ReceiveEvent(netFilter = RegisterMode.AUTHORITY)
+    @NetFilterEvent(netFilter = RegisterMode.AUTHORITY)
+    @ReceiveEvent
     public void onPurchaseItem(PurchaseItemEvent event, EntityRef entity) {
         if (event.getTargetPrefab() != null && event.getTargetPrefab().hasComponent(ValueComponent.class)) {
             EntityRef item = entityManager.create(event.getTargetPrefab());
