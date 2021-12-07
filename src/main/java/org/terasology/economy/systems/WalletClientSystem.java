@@ -5,13 +5,13 @@ package org.terasology.economy.systems;
 import org.terasology.economy.events.WalletUpdatedEvent;
 import org.terasology.economy.ui.WalletHud;
 import org.terasology.engine.entitySystem.entity.EntityRef;
-import org.terasology.engine.entitySystem.event.ReceiveEvent;
 import org.terasology.engine.entitySystem.systems.BaseComponentSystem;
 import org.terasology.engine.entitySystem.systems.RegisterMode;
 import org.terasology.engine.entitySystem.systems.RegisterSystem;
 import org.terasology.engine.logic.players.LocalPlayer;
 import org.terasology.engine.registry.In;
 import org.terasology.engine.rendering.nui.NUIManager;
+import org.terasology.gestalt.entitysystem.event.ReceiveEvent;
 import org.terasology.nui.databinding.Binding;
 import org.terasology.nui.databinding.DefaultBinding;
 
