@@ -10,7 +10,4 @@ import org.terasology.gestalt.entitysystem.component.EmptyComponent;
  */
 @AddToBlockBasedItem
 public class PurchasableComponent extends EmptyComponent<PurchasableComponent> {
-    @Override
-    public void copyFrom(PurchasableComponent other) {
-    }
 }
